@@ -10,8 +10,8 @@ mqttport: 1883
 city : 'Kawasaki'
 # Switchbot config
 switchbot:
-  token: ''
-  secret: ''
+  token: 'c66aa6d5490214a432d63cf974b74d5057bf022b57d3d85eb026b3b5f6d7c11bf4b9da3ed32b92d711c5c7ddd5ed1338'
+  secret: 'cf66b29a1f1bc102db9f8fb72d61a1d5'
   plug_id: '34B7DAD4C62E'
   bot_id: 'C9690A9783EC'
 
