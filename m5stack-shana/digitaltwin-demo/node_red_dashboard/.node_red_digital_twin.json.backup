@@ -168,7 +168,7 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 80,
+        "x": 100,
         "y": 240,
         "wires": [
             [
@@ -183,7 +183,7 @@
         "name": "",
         "group": "52560e4898df94f5",
         "order": 0,
-        "width": "3",
+        "width": "4",
         "height": "3",
         "gtype": "gage",
         "title": "PT_sensor1_temp_SHT",
@@ -226,7 +226,7 @@
         "type": "function",
         "z": "49317004d5317078",
         "name": "parse_sensor_1",
-        "func": "if (msg.payload && msg.payload.TEDS){\n    let msg1 = { \n        topic: \"sensor_1_tempSHT\",\n        payload: parseFloat(msg.payload.TEDS.DEBUG[0].TempSHT)\n    };\n    let msg2 = {\n        topic: \"sensor_1_tempBMP\",\n        payload: parseFloat(msg.payload.TEDS.DEBUG[0].TempBMP),\n    };\n    let msg3 = {\n        topic: \"sensor_1_Humidity\",\n        payload: parseFloat(msg.payload.TEDS.DEBUG[0].Humidity),\n    };\n    let msg4 = {\n        topic: \"sensor_1_Altitude\",\n        payload: parseFloat(msg.payload.TEDS.DEBUG[0].Altitude),\n    };\n    let msg5 = {\n        topic: \"sensor_1_Pressure\",\n        payload: parseFloat(msg.payload.TEDS.DEBUG[0].Pressure),\n    };\n    return [msg1, msg2, msg3, msg4, msg5];\n}\nelse if (msg.payload && msg.payload.root){\n    let msg1 = {\n        topic: \"sensor_1_tempSHT\",\n        payload: parseFloat(msg.payload.root.TempSHT),\n    };\n    let msg2 = {\n        topic: \"sensor_1_tempBMP\",\n        payload: parseFloat(msg.payload.root.TempBMP),\n    };\n    let msg3 = {\n        topic: \"sensor_1_Humidity\",\n        payload: parseFloat(msg.payload.root.Humidity),\n    };\n    let msg4 = {\n        topic: \"sensor_1_Altitude\",\n        payload: parseFloat(msg.payload.root.Altitude),\n    };\n    let msg5 = {\n        topic: \"sensor_1_Pressure\",\n        payload: parseFloat(msg.payload.root.Pressure),\n    };\n    return [msg1, msg2, msg3, msg4, msg5];\n}\nelse if (msg.payload && typeof msg.payload === 'object') {\n    // Handle the case where msg.payload is a JSON object\n    console.log(\"msg.payload (JSON):\", msg.payload);\n\n    // Ensure the properties exist in msg.payload\n    let msg1 = { \n            topic: \"sensor_1_tempSHT\",\n            payload: parseFloat(msg.payload.TempSHT) || 'N/A' };\n    let msg2 = {\n        topic: \"sensor_1_tempBMP\", \n        payload: parseFloat(msg.payload.TempBMP) || 'N/A' };\n    let msg3 = {\n        topic: \"sensor_1_Humidity\",\n        payload: parseFloat(msg.payload.Humidity) || 'N/A' };\n    let msg4 = {\n        topic: \"sensor_1_Altitude\",\n        payload: parseFloat(msg.payload.Altitude) || 'N/A' };\n    let msg5 = {\n        topic: \"sensor_1_Pressure\", \n        payload: parseFloat(msg.payload.Pressure) || 'N/A' };\n\n    return [msg1, msg2, msg3, msg4, msg5];\n} else {\n    // Handle case where msg.payload is not in the expected format\n    //let msg1 = { payload: msg.payload }\n    //return [msg1, msg1, msg1, msg1, msg1];\n}",
+        "func": "if (msg.payload && msg.payload.TEDS) {\n    let transducerData = msg.payload.TEDS.transducerSampleDatas;\n    let msg1 = { topic: \"sensor_1_tempSHT\", payload: transducerData[0] || 'N/A' };\n    let msg2 = { topic: \"sensor_1_tempBMP\", payload: transducerData[1] || 'N/A' };\n    let msg3 = { topic: \"sensor_1_Humidity\", payload: transducerData[2] || 'N/A' };\n    let msg4 = { topic: \"sensor_1_Pressure\", payload: transducerData[3] || 'N/A' };\n    return [msg1, msg2, msg3, msg4];\n} else if (msg.payload && msg.payload.root) {\n    let transducerData = msg.payload.root.transducerSampleDatas;\n    let msg1 = { topic: \"sensor_1_tempSHT\", payload: transducerData[0] || 'N/A' };\n    let msg2 = { topic: \"sensor_1_tempBMP\", payload: transducerData[1] || 'N/A' };\n    let msg3 = { topic: \"sensor_1_Humidity\", payload: transducerData[2] || 'N/A' };\n    let msg4 = { topic: \"sensor_1_Pressure\", payload: transducerData[3] || 'N/A' };\n    return [msg1, msg2, msg3, msg4];\n} else if (msg.payload && typeof msg.payload === 'object') {\n    // Handle the case where msg.payload is a JSON object\n    console.log(\"msg.payload (JSON):\", msg.payload);\n\n    // Ensure the transducerSampleDatas property exists in msg.payload\n    let transducerData = (msg.payload.transducerSampleDatas || []);\n    let msg1 = { topic: \"sensor_1_tempSHT\", payload: transducerData[0] || 'N/A' };\n    let msg2 = { topic: \"sensor_1_tempBMP\", payload: transducerData[1] || 'N/A' };\n    let msg3 = { topic: \"sensor_1_Humidity\", payload: transducerData[2] || 'N/A' };\n    let msg4 = { topic: \"sensor_1_Pressure\", payload: transducerData[3] || 'N/A' };\n    return [msg1, msg2, msg3, msg4];\n} else {\n    // Handle case where msg.payload is not in the expected format\n    console.log(\"Unexpected payload format:\", msg.payload);\n    return null;\n}",
         "outputs": 5,
         "timeout": 0,
         "noerr": 0,
@@ -241,18 +241,11 @@
                 "56a8c6e9338c804a"
             ],
             [
-                "f1dca1a64a18c9ea",
-                "aad09f65d54bec7f"
-            ],
-            [
-                "b614847e5062d360",
-                "346b82343c90220a"
+                "f1dca1a64a18c9ea"
             ],
             [],
-            [
-                "8c4ef166d059a206",
-                "08cf3202d5c3e627"
-            ]
+            [],
+            []
         ]
     },
     {
@@ -263,8 +256,8 @@
         "property": "payload",
         "attr": "",
         "chr": "",
-        "x": 300,
-        "y": 300,
+        "x": 280,
+        "y": 280,
         "wires": [
             [
                 "ce4a8c74274d0c40"
@@ -278,7 +271,7 @@
         "name": "",
         "group": "52560e4898df94f5",
         "order": 0,
-        "width": "3",
+        "width": "4",
         "height": "3",
         "gtype": "gage",
         "title": "PT_sensor_1_temp_BMP",
@@ -300,63 +293,6 @@
         "wires": []
     },
     {
-        "id": "b614847e5062d360",
-        "type": "ui_gauge",
-        "z": "49317004d5317078",
-        "name": "",
-        "group": "52560e4898df94f5",
-        "order": 0,
-        "width": "3",
-        "height": "3",
-        "gtype": "gage",
-        "title": "PT_sensor_1_Humidity",
-        "label": "%",
-        "format": "{{value}}",
-        "min": 0,
-        "max": "100",
-        "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
-        ],
-        "seg1": "",
-        "seg2": "",
-        "diff": false,
-        "className": "",
-        "x": 730,
-        "y": 260,
-        "wires": []
-    },
-    {
-        "id": "8c4ef166d059a206",
-        "type": "ui_gauge",
-        "z": "49317004d5317078",
-        "d": true,
-        "name": "",
-        "group": "52560e4898df94f5",
-        "order": 0,
-        "width": "3",
-        "height": "3",
-        "gtype": "gage",
-        "title": "sensor_1_Pressure",
-        "label": "Pa",
-        "format": "{{value}}",
-        "min": 0,
-        "max": "200000",
-        "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
-        ],
-        "seg1": "",
-        "seg2": "",
-        "diff": false,
-        "className": "",
-        "x": 710,
-        "y": 300,
-        "wires": []
-    },
-    {
         "id": "f47d7d9856c1399a",
         "type": "mqtt in",
         "z": "49317004d5317078",
@@ -369,7 +305,7 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 80,
+        "x": 100,
         "y": 420,
         "wires": [
             [
@@ -384,7 +320,7 @@
         "name": "",
         "group": "52560e4898df94f5",
         "order": 0,
-        "width": "3",
+        "width": "4",
         "height": "3",
         "gtype": "gage",
         "title": "PT_sensor_2_temp_SHT",
@@ -427,7 +363,7 @@
         "type": "function",
         "z": "49317004d5317078",
         "name": "parse_sensor_2",
-        "func": "if (msg.payload && msg.payload.TEDS){\n    let msg1 = {\n        topic: \"sensor_2_tempSHT\",\n        payload: parseFloat(msg.payload.TEDS.DEBUG[0].TempSHT)\n    };\n    let msg2 = {\n        topic: \"sensor_2_tempBMP\",\n        payload: parseFloat(msg.payload.TEDS.DEBUG[0].TempBMP),\n    };\n    let msg3 = {\n        topic: \"sensor_2_Humidity\",\n        payload: parseFloat(msg.payload.TEDS.DEBUG[0].Humidity),\n    };\n    let msg4 = {\n        topic: \"sensor_2_Altitude\",\n        payload: parseFloat(msg.payload.TEDS.DEBUG[0].Altitude),\n    };\n    let msg5 = {\n        topic: \"sensor_2_Pressure\",\n        payload: parseFloat(msg.payload.TEDS.DEBUG[0].Pressure),\n    };\n    return [msg1, msg2, msg3, msg4, msg5];\n}\nelse if (msg.payload && msg.payload.root){\n    let msg1 = {\n        topic: \"sensor_2_tempSHT\",\n        payload: parseFloat(msg.payload.root.TempSHT),\n    };\n    let msg2 = {\n        topic: \"sensor_2_tempBMP\",\n        payload: parseFloat(msg.payload.root.TempBMP),\n    };\n    let msg3 = {\n        topic: \"sensor_2_Humidity\",\n        payload: parseFloat(msg.payload.root.Humidity),\n    };\n    let msg4 = {\n        topic: \"sensor_2_Altitude\",\n        payload: parseFloat(msg.payload.root.Altitude),\n    };\n    let msg5 = {\n        topic: \"sensor_2_Pressure\",\n        payload: parseFloat(msg.payload.root.Pressure),\n    };\n    return [msg1, msg2, msg3, msg4, msg5];\n}\nelse if (msg.payload && typeof msg.payload === 'object') {\n    // Handle the case where msg.payload is a JSON object\n    console.log(\"msg.payload (JSON):\", msg.payload);\n\n    // Ensure the properties exist in msg.payload\n    let msg1 = { topic: \"sensor_2_tempSHT\", payload: parseFloat(msg.payload.TempSHT) || 'N/A' };\n    let msg2 = { topic: \"sensor_2_tempBMP\", payload: parseFloat(msg.payload.TempBMP) || 'N/A' };\n    let msg3 = { topic: \"sensor_2_Humidity\", payload: parseFloat(msg.payload.Humidity) || 'N/A' };\n    let msg4 = { topic: \"sensor_2_Altitude\", payload: parseFloat(msg.payload.Altitude) || 'N/A' };\n    let msg5 = { topic: \"sensor_2_Pressure\", payload: parseFloat(msg.payload.Pressure) || 'N/A' };\n\n    return [msg1, msg2, msg3, msg4, msg5];\n} else {\n    // Handle case where msg.payload is not in the expected format\n    //let msg1 = { payload: msg.payload }\n    //return [msg1, msg1, msg1, msg1, msg1];\n}",
+        "func": "if (msg.payload && msg.payload.TEDS) {\n    let transducerData = msg.payload.TEDS.transducerSampleDatas;\n    let msg1 = { topic: \"sensor_2_tempSHT\", payload: transducerData[0] || 'N/A' };\n    let msg2 = { topic: \"sensor_2_tempBMP\", payload: transducerData[1] || 'N/A' };\n    let msg3 = { topic: \"sensor_2_Humidity\", payload: transducerData[2] || 'N/A' };\n    let msg4 = { topic: \"sensor_2_Pressure\", payload: transducerData[3] || 'N/A' };\n    return [msg1, msg2, msg3, msg4];\n} else if (msg.payload && msg.payload.root) {\n    let transducerData = msg.payload.root.transducerSampleDatas;\n    let msg1 = { topic: \"sensor_2_tempSHT\", payload: transducerData[0] || 'N/A' };\n    let msg2 = { topic: \"sensor_2_tempBMP\", payload: transducerData[1] || 'N/A' };\n    let msg3 = { topic: \"sensor_2_Humidity\", payload: transducerData[2] || 'N/A' };\n    let msg4 = { topic: \"sensor_2_Pressure\", payload: transducerData[3] || 'N/A' };\n    return [msg1, msg2, msg3, msg4];\n} else if (msg.payload && typeof msg.payload === 'object') {\n    // Handle the case where msg.payload is a JSON object\n    console.log(\"msg.payload (JSON):\", msg.payload);\n\n    // Ensure the transducerSampleDatas property exists in msg.payload\n    let transducerData = (msg.payload.transducerSampleDatas || []);\n    let msg1 = { topic: \"sensor_2_tempSHT\", payload: transducerData[0] || 'N/A' };\n    let msg2 = { topic: \"sensor_2_tempBMP\", payload: transducerData[1] || 'N/A' };\n    let msg3 = { topic: \"sensor_2_Humidity\", payload: transducerData[2] || 'N/A' };\n    let msg4 = { topic: \"sensor_2_Pressure\", payload: transducerData[3] || 'N/A' };\n    return [msg1, msg2, msg3, msg4];\n} else {\n    // Handle case where msg.payload is not in the expected format\n    console.log(\"Unexpected payload format:\", msg.payload);\n    return null;\n}",
         "outputs": 5,
         "timeout": 0,
         "noerr": 0,
@@ -442,18 +378,11 @@
                 "56a8c6e9338c804a"
             ],
             [
-                "1862df877838d618",
-                "aad09f65d54bec7f"
-            ],
-            [
-                "0395f2f5a7e5bb9b",
-                "346b82343c90220a"
+                "1862df877838d618"
             ],
             [],
-            [
-                "26918fe17e626657",
-                "08cf3202d5c3e627"
-            ]
+            [],
+            []
         ]
     },
     {
@@ -479,7 +408,7 @@
         "name": "",
         "group": "52560e4898df94f5",
         "order": 0,
-        "width": "3",
+        "width": "4",
         "height": "3",
         "gtype": "gage",
         "title": "PT_sensor_2_temp_BMP",
@@ -498,63 +427,6 @@
         "className": "",
         "x": 730,
         "y": 400,
-        "wires": []
-    },
-    {
-        "id": "0395f2f5a7e5bb9b",
-        "type": "ui_gauge",
-        "z": "49317004d5317078",
-        "name": "",
-        "group": "52560e4898df94f5",
-        "order": 0,
-        "width": "3",
-        "height": "3",
-        "gtype": "gage",
-        "title": "PT_sensor_2_Humidity",
-        "label": "%",
-        "format": "{{value}}",
-        "min": 0,
-        "max": "100",
-        "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
-        ],
-        "seg1": "",
-        "seg2": "",
-        "diff": false,
-        "className": "",
-        "x": 730,
-        "y": 440,
-        "wires": []
-    },
-    {
-        "id": "26918fe17e626657",
-        "type": "ui_gauge",
-        "z": "49317004d5317078",
-        "d": true,
-        "name": "",
-        "group": "52560e4898df94f5",
-        "order": 0,
-        "width": "3",
-        "height": "3",
-        "gtype": "gage",
-        "title": "sensor_2_Pressure",
-        "label": "Pa",
-        "format": "{{value}}",
-        "min": 0,
-        "max": "200000",
-        "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
-        ],
-        "seg1": "",
-        "seg2": "",
-        "diff": false,
-        "className": "",
-        "x": 710,
-        "y": 480,
         "wires": []
     },
     {
@@ -586,7 +458,7 @@
         "property": "payload",
         "attr": "",
         "chr": "",
-        "x": 1140,
+        "x": 1100,
         "y": 220,
         "wires": [
             [
@@ -603,8 +475,8 @@
         "property": "payload",
         "attr": "",
         "chr": "",
-        "x": 1150,
-        "y": 280,
+        "x": 1110,
+        "y": 260,
         "wires": [
             [
                 "eb21232a75b5e5cc"
@@ -616,14 +488,14 @@
         "type": "function",
         "z": "49317004d5317078",
         "name": "parse_digital_twin",
-        "func": "if (msg.payload && msg.payload.TEDS){\n    let msg1 = {\n        topic: \"digitaltwin_tempSHT\",\n        payload: parseFloat(msg.payload.TEDS.DEBUG[0].TempSHT)\n    };\n    let msg2 = {\n        topic: \"digitaltwin_tempBMP\",\n        payload: parseFloat(msg.payload.TEDS.DEBUG[0].TempBMP),\n    };\n    let msg3 = {\n        topic: \"digitaltwin_Humidity\",\n        payload: parseFloat(msg.payload.TEDS.DEBUG[0].Humidity),\n    };\n    let msg4 = {\n        topic: \"digitaltwin_Altitude\",\n        payload: parseFloat(msg.payload.TEDS.DEBUG[0].Altitude),\n    };\n    let msg5 = {\n        topic: \"digitaltwin_Pressure\",\n        payload: parseFloat(msg.payload.TEDS.DEBUG[0].Pressure),\n    };\n    return [msg1, msg2, msg3, msg4, msg5];\n}\nelse if (msg.payload && msg.payload.root){\n    let msg1 = {\n        topic: \"digitaltwin_tempSHT\",\n        payload: parseFloat(msg.payload.root.TempSHT),\n    };\n    let msg2 = {\n        topic: \"digitaltwin_tempBMP\",\n        payload: parseFloat(msg.payload.root.TempBMP),\n    };\n    let msg3 = {\n        topic: \"digitaltwin_Humidity\",\n        payload: parseFloat(msg.payload.root.Humidity),\n    };\n    let msg4 = {\n        topic: \"digitaltwin_Altitude\",\n        payload: parseFloat(msg.payload.root.Altitude),\n    };\n    let msg5 = {\n        topic: \"digitaltwin_Pressure\",\n        payload: parseFloat(msg.payload.root.Pressure),\n    };\n    return [msg1, msg2, msg3, msg4, msg5];\n}\nelse if (msg.payload && typeof msg.payload === 'object') {\n    // Handle the case where msg.payload is a JSON object\n    console.log(\"msg.payload (JSON):\", msg.payload);\n\n    // Ensure the properties exist in msg.payload\n    let msg1 = { topic: \"digitaltwin_tempSHT\", payload: parseFloat(msg.payload.TempSHT) || 'N/A' };\n    let msg2 = { topic: \"digitaltwin_tempBMP\", payload: parseFloat(msg.payload.TempBMP) || 'N/A' };\n    let msg3 = { topic: \"digitaltwin_Humidity\", payload: parseFloat(msg.payload.Humidity) || 'N/A' };\n    let msg4 = { topic: \"digitaltwin_Altitude\", payload: parseFloat(msg.payload.Altitude) || 'N/A' };\n    let msg5 = { topic: \"digitaltwin_Pressure\", payload: parseFloat(msg.payload.Pressure) || 'N/A' };\n\n    return [msg1, msg2, msg3, msg4, msg5];\n} else {\n    // Handle case where msg.payload is not in the expected format\n    //let msg1 = { payload: msg.payload }\n    //return [msg1, msg1, msg1, msg1, msg1];\n}",
+        "func": "if (msg.payload && msg.payload.TEDS) {\n    let transducerData = msg.payload.TEDS.transducerSampleDatas;\n    let msg1 = { topic: \"dt_tempSHT\", payload: transducerData[0] || 'N/A' };\n    let msg2 = { topic: \"dt_tempBMP\", payload: transducerData[1] || 'N/A' };\n    let msg3 = { topic: \"dt_Humidity\", payload: transducerData[2] || 'N/A' };\n    let msg4 = { topic: \"dt_Pressure\", payload: transducerData[3] || 'N/A' };\n    return [msg1, msg2, msg3, msg4];\n} else if (msg.payload && msg.payload.root) {\n    let transducerData = msg.payload.root.transducerSampleDatas;\n    let msg1 = { topic: \"dt_tempSHT\", payload: transducerData[0] || 'N/A' };\n    let msg2 = { topic: \"dt_tempBMP\", payload: transducerData[1] || 'N/A' };\n    let msg3 = { topic: \"dt_Humidity\", payload: transducerData[2] || 'N/A' };\n    let msg4 = { topic: \"dt_Pressure\", payload: transducerData[3] || 'N/A' };\n    return [msg1, msg2, msg3, msg4];\n} else if (msg.payload && typeof msg.payload === 'object') {\n    // Handle the case where msg.payload is a JSON object\n    console.log(\"msg.payload (JSON):\", msg.payload);\n\n    // Ensure the transducerSampleDatas property exists in msg.payload\n    let transducerData = (msg.payload.transducerSampleDatas || []);\n    let msg1 = { topic: \"dt_tempSHT\", payload: transducerData[0] || 'N/A' };\n    let msg2 = { topic: \"dt_tempBMP\", payload: transducerData[1] || 'N/A' };\n    let msg3 = { topic: \"dt_Humidity\", payload: transducerData[2] || 'N/A' };\n    let msg4 = { topic: \"dt_Pressure\", payload: transducerData[3] || 'N/A' };\n    return [msg1, msg2, msg3, msg4];\n} else {\n    // Handle case where msg.payload is not in the expected format\n    console.log(\"Unexpected payload format:\", msg.payload);\n    return null;\n}",
         "outputs": 5,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1350,
+        "x": 1310,
         "y": 220,
         "wires": [
             [
@@ -631,18 +503,11 @@
                 "56a8c6e9338c804a"
             ],
             [
-                "2ca34b9a80cde87b",
-                "aad09f65d54bec7f"
-            ],
-            [
-                "536a57d541592eaf",
-                "346b82343c90220a"
+                "2ca34b9a80cde87b"
             ],
             [],
-            [
-                "fdc29c530ab9cab9",
-                "08cf3202d5c3e627"
-            ]
+            [],
+            []
         ]
     },
     {
@@ -652,7 +517,7 @@
         "name": "",
         "group": "52560e4898df94f5",
         "order": 0,
-        "width": "3",
+        "width": "4",
         "height": "3",
         "gtype": "gage",
         "title": "DT_temp_SHT",
@@ -680,7 +545,7 @@
         "name": "",
         "group": "52560e4898df94f5",
         "order": 0,
-        "width": "3",
+        "width": "4",
         "height": "3",
         "gtype": "gage",
         "title": "DT_temp_BMP",
@@ -702,63 +567,6 @@
         "wires": []
     },
     {
-        "id": "536a57d541592eaf",
-        "type": "ui_gauge",
-        "z": "49317004d5317078",
-        "name": "",
-        "group": "52560e4898df94f5",
-        "order": 0,
-        "width": "3",
-        "height": "3",
-        "gtype": "gage",
-        "title": "DT_Humidity",
-        "label": "%",
-        "format": "{{value}}",
-        "min": 0,
-        "max": "100",
-        "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
-        ],
-        "seg1": "",
-        "seg2": "",
-        "diff": false,
-        "className": "",
-        "x": 1550,
-        "y": 260,
-        "wires": []
-    },
-    {
-        "id": "fdc29c530ab9cab9",
-        "type": "ui_gauge",
-        "z": "49317004d5317078",
-        "d": true,
-        "name": "",
-        "group": "52560e4898df94f5",
-        "order": 0,
-        "width": "3",
-        "height": "3",
-        "gtype": "gage",
-        "title": "DT_pressure",
-        "label": "Pa",
-        "format": "{{value}}",
-        "min": 0,
-        "max": "200000",
-        "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
-        ],
-        "seg1": "",
-        "seg2": "",
-        "diff": false,
-        "className": "",
-        "x": 1550,
-        "y": 300,
-        "wires": []
-    },
-    {
         "id": "c9e1b0751bd8d168",
         "type": "mqtt in",
         "z": "49317004d5317078",
@@ -775,7 +583,8 @@
         "y": 560,
         "wires": [
             [
-                "f67be04f7e9a4f0a"
+                "fa3d78b42b744047",
+                "344e4ef379777a89"
             ]
         ]
     },
@@ -813,11 +622,11 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 990,
+        "x": 950,
         "y": 560,
         "wires": [
             [
-                "c1a927715eef0a0b"
+                "5b12e8f64512826f"
             ]
         ]
     },
@@ -838,7 +647,7 @@
         "font": "",
         "fontSize": 16,
         "color": "#000000",
-        "x": 1590,
+        "x": 1550,
         "y": 560,
         "wires": []
     },
@@ -851,8 +660,8 @@
         "tooltip": "",
         "group": "52560e4898df94f5",
         "order": 14,
-        "width": 0,
-        "height": 0,
+        "width": "3",
+        "height": "2",
         "wrap": false,
         "passthru": true,
         "topic": "topic",
@@ -862,8 +671,8 @@
         "max": "25",
         "step": 1,
         "className": "",
-        "x": 130,
-        "y": 720,
+        "x": 590,
+        "y": 660,
         "wires": [
             [
                 "8b323dd9ca2eda69"
@@ -884,8 +693,8 @@
         "correl": "",
         "expiry": "",
         "broker": "bdea7a73f727af35",
-        "x": 460,
-        "y": 720,
+        "x": 840,
+        "y": 660,
         "wires": []
     },
     {
@@ -904,8 +713,8 @@
         "interpolate": "linear",
         "nodata": "",
         "dot": false,
-        "ymin": "10",
-        "ymax": "40",
+        "ymin": "15",
+        "ymax": "30",
         "removeOlder": "10",
         "removeOlderPoints": "10000",
         "removeOlderUnit": "60",
@@ -926,143 +735,8 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 720,
-        "y": 80,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "aad09f65d54bec7f",
-        "type": "ui_chart",
-        "z": "49317004d5317078",
-        "d": true,
-        "name": "",
-        "group": "52560e4898df94f5",
-        "order": 15,
-        "width": "0",
-        "height": "0",
-        "label": "Temperature(C)",
-        "chartType": "line",
-        "legend": "true",
-        "xformat": "HH:mm:ss",
-        "interpolate": "linear",
-        "nodata": "",
-        "dot": false,
-        "ymin": "10",
-        "ymax": "",
-        "removeOlder": 1,
-        "removeOlderPoints": "100",
-        "removeOlderUnit": "3600",
-        "cutout": 0,
-        "useOneColor": false,
-        "useUTC": false,
-        "colors": [
-            "#1f77b4",
-            "#aec7e8",
-            "#ff7f0e",
-            "#2ca02c",
-            "#98df8a",
-            "#d62728",
-            "#ff9896",
-            "#9467bd",
-            "#c5b0d5"
-        ],
-        "outputs": 1,
-        "useDifferentColor": false,
-        "className": "",
-        "x": 940,
-        "y": 80,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "346b82343c90220a",
-        "type": "ui_chart",
-        "z": "49317004d5317078",
-        "d": true,
-        "name": "",
-        "group": "52560e4898df94f5",
-        "order": 15,
-        "width": "0",
-        "height": "0",
-        "label": "Humidity(%)",
-        "chartType": "line",
-        "legend": "true",
-        "xformat": "HH:mm:ss",
-        "interpolate": "linear",
-        "nodata": "",
-        "dot": false,
-        "ymin": "0",
-        "ymax": "100",
-        "removeOlder": "10",
-        "removeOlderPoints": "10000",
-        "removeOlderUnit": "60",
-        "cutout": 0,
-        "useOneColor": false,
-        "useUTC": false,
-        "colors": [
-            "#1f77b4",
-            "#aec7e8",
-            "#ff7f0e",
-            "#2ca02c",
-            "#98df8a",
-            "#d62728",
-            "#ff9896",
-            "#9467bd",
-            "#c5b0d5"
-        ],
-        "outputs": 1,
-        "useDifferentColor": false,
-        "className": "",
-        "x": 1170,
-        "y": 80,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "08cf3202d5c3e627",
-        "type": "ui_chart",
-        "z": "49317004d5317078",
-        "d": true,
-        "name": "",
-        "group": "52560e4898df94f5",
-        "order": 15,
-        "width": "0",
-        "height": "0",
-        "label": "Pressure(Pa)",
-        "chartType": "line",
-        "legend": "true",
-        "xformat": "HH:mm:ss",
-        "interpolate": "linear",
-        "nodata": "",
-        "dot": false,
-        "ymin": "90000",
-        "ymax": "120000",
-        "removeOlder": "24",
-        "removeOlderPoints": "10000",
-        "removeOlderUnit": "3600",
-        "cutout": 0,
-        "useOneColor": false,
-        "useUTC": false,
-        "colors": [
-            "#1f77b4",
-            "#aec7e8",
-            "#ff7f0e",
-            "#2ca02c",
-            "#98df8a",
-            "#d62728",
-            "#ff9896",
-            "#9467bd",
-            "#c5b0d5"
-        ],
-        "outputs": 1,
-        "useDifferentColor": false,
-        "className": "",
-        "x": 1410,
-        "y": 80,
+        "x": 860,
+        "y": 100,
         "wires": [
             []
         ]
@@ -1072,14 +746,14 @@
         "type": "function",
         "z": "49317004d5317078",
         "name": "parse_control_sys",
-        "func": "if (msg.payload.includes(\"on\")){\n    msg.payload = \"on\";\n    return msg;\n} else {\n    msg.payload = \"off\";\n    return msg;\n}",
+        "func": "if (msg.payload && typeof msg.payload === 'object') {\n    // Extract the transducerSampleData field from the payload\n    let transducerData = msg.payload.transducersampleData;\n\n    // Determine the payload based on the value of transducerData\n    let payload = (transducerData === 1) ? \"on\" : \"off\";\n\n    // Create the message with the topic and payload\n    let msg1 = { topic: \"pt_heater\", payload: payload };\n\n    return msg1;\n} else {\n    // Handle case where msg.payload is not in the expected format\n    console.log(\"Unexpected payload format:\", msg.payload);\n    return null;\n}",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 370,
+        "x": 430,
         "y": 560,
         "wires": [
             [
@@ -1092,19 +766,67 @@
         "type": "function",
         "z": "49317004d5317078",
         "name": "parse_control_twin",
-        "func": "if (msg.payload.includes(\"on\")){\n    msg.payload = \"on\";\n    return msg;\n} else {\n    msg.payload = \"off\";\n    return msg;\n}",
+        "func": "if (msg.payload && typeof msg.payload === 'object') {\n    // Extract the transducerSampleData field from the payload\n    let transducerData = msg.payload.transducersampleData;\n\n    // Determine the payload based on the value of transducerData\n    let payload = (transducerData === 0) ? \"on\" : \"off\";\n\n    // Create the message with the topic and payload\n    let msg1 = { topic: \"dt_heater\", payload: payload };\n    return msg1;\n} else {\n    // Handle case where msg.payload is not in the expected format\n    console.log(\"Unexpected payload format:\", msg.payload);\n    return null;\n}",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1250,
+        "x": 1290,
         "y": 560,
         "wires": [
             [
                 "0b1b22b59b418a3c"
             ]
         ]
+    },
+    {
+        "id": "fa3d78b42b744047",
+        "type": "json",
+        "z": "49317004d5317078",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": true,
+        "x": 270,
+        "y": 560,
+        "wires": [
+            [
+                "f67be04f7e9a4f0a"
+            ]
+        ]
+    },
+    {
+        "id": "5b12e8f64512826f",
+        "type": "json",
+        "z": "49317004d5317078",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 1130,
+        "y": 560,
+        "wires": [
+            [
+                "c1a927715eef0a0b"
+            ]
+        ]
+    },
+    {
+        "id": "344e4ef379777a89",
+        "type": "debug",
+        "z": "49317004d5317078",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 500,
+        "wires": []
     }
 ]

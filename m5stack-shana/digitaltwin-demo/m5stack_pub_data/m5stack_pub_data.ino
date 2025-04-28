@@ -13,7 +13,8 @@
 #include <M5UnitENV.h>
 #include <WiFi.h>
 #include <PubSubClient.h>
-# include "time.h"
+#include "time.h"
+#include <vector>
 
 // constants
 // loop delay
@@ -176,14 +177,14 @@ String generateFormattedMessage(){
 
 
 String generateMQTTMessageJSON(const std::vector<int>& channelIds) {
-    String json_message = "{ \"netSvcType\": 2," +
-                          "\"netSvcId\": 3," +
-                          "\"msgType\": 2," +
-                          "\"msgLength\": 0," +
-                          "\"errorCode\": 0," +
-                          "\"ncapId\": 1," +
-                          "\"timId\": 1," +
-                          "\"channelIds\": [";
+    String json_message = "{ \"netSvcType\": 2,";
+    json_message += "\"netSvcId\": 3,";
+    json_message += "\"msgType\": 2,";
+    json_message += "\"msgLength\": 0,";
+    json_message += "\"errorCode\": 0,";
+    json_message += "\"ncapId\": 1,";
+    json_message += "\"timId\": 1,";
+    json_message += "\"channelIds\": [";
 
     // Add channel IDs to the JSON
     for (size_t i = 0; i < channelIds.size(); ++i) {
@@ -303,10 +304,10 @@ bool publishDataDisplay(){
 
 bool publishDataMQTT(std::vector<int>& channelIds){
     if (mqttclient.connected()) {
-        const char* mqtt_message = generateMQTTMessageXML(channelIds).c_str();
-        Serial.print(mqtt_message);
-        mqttclient.publish(mqtt_topic_name.c_str(), mqtt_message);
-        //mqttclient.publish(mqtt_topic_name.c_str(), generateMQTTMessageJSON(channelIds).c_str());
+        //const char* mqtt_message = generateMQTTMessageXML(channelIds).c_str();
+        //Serial.print(mqtt_message);
+        //mqttclient.publish(mqtt_topic_name.c_str(), mqtt_message);
+        mqttclient.publish(mqtt_topic_name.c_str(), generateMQTTMessageJSON(channelIds).c_str());
         return true;
     }
     return false;

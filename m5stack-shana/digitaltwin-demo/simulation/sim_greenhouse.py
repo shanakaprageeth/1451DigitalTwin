@@ -108,7 +108,7 @@ def get_json_sensor_message(device_name, tempSHT, tempBMP, humidity, pressure):
     from time import time
     timestamp = int(time())  # Get UNIX timestamp (42 bits)
     channel_ids = [0, 1, 2, 3]  # Channel IDs
-    transducer_sample_datas = [tempSHT, tempBMP, humidity, pressure]  # Transducer data
+    transducer_sample_datas = [round(tempSHT, 2), round(tempBMP, 2), round(humidity, 2), round(pressure, 2)]
 
     return f"""{{
         "netSvcType": 2,
@@ -133,7 +133,7 @@ def get_xml_sensor_message(device_name, tempSHT, tempBMP, humidity, pressure):
     from time import time
     timestamp = int(time())  # Get UNIX timestamp (42 bits)
     channel_ids = "0, 1, 2, 3"  # Channel IDs as a comma-separated string
-    transducer_sample_datas = f"{tempSHT}, {tempBMP}, {humidity}, {pressure}"  # Transducer data as a comma-separated string
+    transducer_sample_datas = f"{tempSHT:.2f}, {tempBMP:.2f}, {humidity:.2f}, {pressure:.2f}"  # Transducer data as a comma-separated string
 
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <TEDS>
@@ -207,8 +207,8 @@ def parse_heater_state_message(message):
 
 def prepare_sensor_message(device_name, tempSHT, tempBMP, humidity, pressure, altitude=-10):
     # Prepare message in proper XML format with header
-    #sensor_msg = get_json_sensor_message(device_name, tempSHT, tempBMP, humidity, pressure, altitude)
-    sensor_msg = get_xml_sensor_message(device_name, tempSHT, tempBMP, humidity, pressure)
+    sensor_msg = get_json_sensor_message(device_name, tempSHT, tempBMP, humidity, pressure)
+    #sensor_msg = get_xml_sensor_message(device_name, tempSHT, tempBMP, humidity, pressure)
     return sensor_msg
 
 # Global flag to prevent multiple executions of mqtt_test_async
