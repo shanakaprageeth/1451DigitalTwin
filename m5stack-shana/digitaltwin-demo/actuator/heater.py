@@ -68,14 +68,45 @@ def turn_off_heater():
 def my_process_received_message(message):
     payload = str(message.payload.decode("utf-8"))
     print(f"Received topic {message.topic} {payload}")
+    
     if message.topic == TOPIC_HEATER_CONTROL:
-        if "on" in payload:
-            turn_on_heater()
-            state = "on"
-        elif "off" in payload:
-            turn_off_heater()
-            state = "off"
-        client.publish(TOPIC_HEATER_STATE, get_json_actuator_message(state), qos=1)
+        try:
+            # Parse the payload as JSON
+            payload_data = json.loads(payload)
+            
+            # Check for required fields in the JSON payload
+            if (payload_data.get("netSvcType") == 2 and
+                payload_data.get("netSvcId") == 1 and
+                payload_data.get("msgType") == 1):
+                
+                # Get the samplingMode and timeout fields
+                sampling_mode = payload_data.get("samplingMode")
+                timeout = payload_data.get("timeout", 0)  # Default to 0 if not provided
+                
+                # Turn the heater on or off based on samplingMode
+                if sampling_mode == 1:  # Turn on
+                    turn_on_heater()
+                    state = "on"
+                elif sampling_mode == 0:  # Turn off
+                    turn_off_heater()
+                    state = "off"
+                else:
+                    print("Invalid samplingMode value in payload")
+                    return
+                
+                # Publish the heater state
+                client.publish(TOPIC_HEATER_STATE, get_json_actuator_message(state), qos=1)
+                
+                # Handle timeout if provided
+                if timeout > 0:
+                    print(f"Timeout set to {timeout} milliseconds. Heater will turn off after timeout.")
+                    sleep(timeout / 1000)  # Convert milliseconds to seconds
+                    turn_off_heater()
+                    client.publish(TOPIC_HEATER_STATE, get_json_actuator_message("off"), qos=1)
+            else:
+                print("Invalid payload structure or missing required fields")
+        except json.JSONDecodeError:
+            print("Failed to parse payload as JSON")
 
 def get_local_time_string():
     """Returns the current local time as a string."""
@@ -83,14 +114,21 @@ def get_local_time_string():
     return datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
 
 def get_json_actuator_message(state):
-    """Constructs a JSON string with sensor data."""
+    """Constructs a JSON string with actuator data."""
+    from time import time
+    timestamp = int(time())  # Get UNIX timestamp (42 bits)
     return f"""{{
-        "Type": "REPLY",
-        "LocalTime": "{get_local_time_string()}",
-        "State": {state},
+        "netSvcType": 2,
+        "netSvcId": 1,
+        "msgType": 2,
+        "msgLength": 0,
+        "errorCode": 0,
+        "ncapId": 1,
+        "timId": 2,
+        "channelId": 1,
+        "transducersampleData": {1 if state == "on" else 0},
+        "timestamp": "{timestamp}0000"
     }}"""
-
-
 
 # Global flag to prevent multiple executions of mqtt_test_async
 mqtt_test_async_running = False

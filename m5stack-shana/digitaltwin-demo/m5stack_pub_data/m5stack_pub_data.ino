@@ -174,42 +174,115 @@ String generateFormattedMessage(){
 }
 
 
-String generateMQTTMessageJSON(){
-    return "{ \"Device\":\"" +  String(device_name) +"\""+
-        ",\"LocalTime\":\"" + getLocalTimeString() +"\""+
-        ",\"TempSHT\":" + String(sht4.cTemp) +
-        ",\"TempBMP\":"+ String(bmp.cTemp) +
-        ",\"Humidity\":" + String(sht4.humidity) +
-        ",\"Pressure\":" + String(bmp.pressure) +
-        ",\"Altitude\":" + String(bmp.altitude) +
-        "}";
+
+String generateMQTTMessageJSON(const std::vector<int>& channelIds) {
+    String json_message = "{ \"netSvcType\": 2," +
+                          "\"netSvcId\": 3," +
+                          "\"msgType\": 2," +
+                          "\"msgLength\": 0," +
+                          "\"errorCode\": 0," +
+                          "\"ncapId\": 1," +
+                          "\"timId\": 1," +
+                          "\"channelIds\": [";
+
+    // Add channel IDs to the JSON
+    for (size_t i = 0; i < channelIds.size(); ++i) {
+        json_message += String(channelIds[i]);
+        if (i < channelIds.size() - 1) {
+            json_message += ", ";
+        }
+    }
+    json_message += "],";
+
+    // Add transducer sample data based on channel IDs
+    json_message += "\"transducerSampleDatas\": [";
+    for (size_t i = 0; i < channelIds.size(); ++i) {
+        switch (channelIds[i]) {
+            case 0:
+                json_message += String(sht4.cTemp); // Temperature from SHT4
+                break;
+            case 1:
+                json_message += String(bmp.cTemp); // Temperature from BMP280
+                break;
+            case 2:
+                json_message += String(sht4.humidity); // Humidity from SHT4
+                break;
+            case 3:
+                json_message += String(bmp.pressure); // Pressure from BMP280
+                break;
+            case 4:
+                json_message += String(bmp.altitude); // Altitude from BMP280
+                break;
+            default:
+                json_message += "null"; // Invalid channel ID
+                break;
+        }
+        if (i < channelIds.size() - 1) {
+            json_message += ", ";
+        }
+    }
+    json_message += "],";
+
+    // Add timestamp
+    json_message += "\"timestamp\": \"" + String((uint32_t)time(nullptr)) + "0000\"";
+
+    json_message += "}";
+    return json_message;
 }
 
-String generateMQTTMessageXML(){
-  //when xml is too long publish fails
+String generateMQTTMessageXML(const std::vector<int>& channelIds) {
     String xml_message = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-    xml_message += "<TEDS ID=\"[v03]\">";
-    //xml_message += "<BasicTEDS>";
-    //xml_message += "<Manufacturer>Dewesoft</Manufacturer>";
-    //xml_message += "<Model>1</Model>";
-    //xml_message += "<VersionLetter>A</VersionLetter>";
-    //xml_message += "<VersionNumber>1</VersionNumber>";
-    //xml_message += "<SerialNumber>1</SerialNumber>";
-    //xml_message += "</BasicTEDS>";
-    //xml_message += "<TEDS-Code length=\"40\">6A4000200401000098D0421F00000000 00000012040000120400001204000000 C34800000000E000</TEDS-Code>";
-    //xml_message += "<Info-Section EditorVersion=\"Dewesoft TedsEditor V2.2.12\">";
-    //xml_message += "<InfoLine16>2023/05/22 0:25:06: Templates cleared by User.</InfoLine16>";
-    //xml_message += "<InfoLine17>2023/05/22 0:25:28: Base template [#38] Thermistor created.</InfoLine17>";
-    //xml_message += "</Info-Section>";
-    xml_message += "<DEBUG>";
-    xml_message += "<DeviceName>" + String(device_name) + "</DeviceName>";
-    xml_message += "<LocalTime>" + String(getLocalTimeString()) + "</LocalTime>";
-    xml_message += "<TempSHT>" + String(sht4.cTemp) + "</TempSHT>";
-    xml_message += "<TempBMP>" + String(bmp.cTemp) + "</TempBMP>";
-    xml_message += "<Humidity>" + String(sht4.humidity) + "</Humidity>";
-    //xml_message += "<Pressure>" + String(bmp.pressure) + "</Pressure>";
-    //xml_message += "<Altitude>" + String(bmp.altitude) + "</Altitude>";
-    xml_message += "</DEBUG>";
+    xml_message += "<TEDS>";
+    xml_message += "<netSvcType>2</netSvcType>";
+    xml_message += "<netSvcId>3</netSvcId>";
+    xml_message += "<msgType>2</msgType>";
+    xml_message += "<msgLength>0</msgLength>";
+    xml_message += "<errorCode>0</errorCode>";
+    xml_message += "<ncapId>1</ncapId>";
+    xml_message += "<timId>1</timId>";
+
+    // Add channel IDs as a comma-separated list
+    xml_message += "<channelIds>";
+    for (size_t i = 0; i < channelIds.size(); ++i) {
+        xml_message += String(channelIds[i]);
+        if (i < channelIds.size() - 1) {
+            xml_message += ",";
+        }
+    }
+    xml_message += "</channelIds>";
+
+    // Add transducer sample data as a comma-separated list
+    xml_message += "<transducerSampleDatas>";
+    for (size_t i = 0; i < channelIds.size(); ++i) {
+        switch (channelIds[i]) {
+            case 0:
+                xml_message += String(sht4.cTemp); // Temperature from SHT4
+                break;
+            case 1:
+                xml_message += String(bmp.cTemp); // Temperature from BMP280
+                break;
+            case 2:
+                xml_message += String(sht4.humidity); // Humidity from SHT4
+                break;
+            case 3:
+                xml_message += String(bmp.pressure); // Pressure from BMP280
+                break;
+            case 4:
+                xml_message += String(bmp.altitude); // Altitude from BMP280
+                break;
+            default:
+                xml_message += "null"; // Invalid channel ID
+                break;
+        }
+        if (i < channelIds.size() - 1) {
+            xml_message += ",";
+        }
+    }
+    xml_message += "</transducerSampleDatas>";
+
+    // Add timestamp
+    xml_message += "<timestamp>" + String((uint32_t)time(nullptr)) + "0000</timestamp>";
+
     xml_message += "</TEDS>";
     return xml_message;
 }
@@ -228,12 +301,12 @@ bool publishDataDisplay(){
     return true;
 }
 
-bool publishDataMQTT(){
+bool publishDataMQTT(std::vector<int>& channelIds){
     if (mqttclient.connected()) {
-        const char* mqtt_message = generateMQTTMessageXML().c_str();
+        const char* mqtt_message = generateMQTTMessageXML(channelIds).c_str();
         Serial.print(mqtt_message);
         mqttclient.publish(mqtt_topic_name.c_str(), mqtt_message);
-        //mqttclient.publish(mqtt_topic_name.c_str(), generateMQTTMessageJSON().c_str());
+        //mqttclient.publish(mqtt_topic_name.c_str(), generateMQTTMessageJSON(channelIds).c_str());
         return true;
     }
     return false;
@@ -249,11 +322,73 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
     Serial.print("Message: ");
     Serial.println(message);
 
-    // Check if the message contains "CMD"
-    if (message.indexOf("REQ_DATA") != -1) {
-        Serial.println("REQ_DATA detected, publishing data...");
+    // Parse the message to check for required fields
+    bool isValidMessage = false;
+    std::vector<int> channelIds = {0, 1, 2, 3}; // Default channel IDs
+
+    // Check if the message is JSON
+    if (message.indexOf("\"netSvcType\": 2") != -1 &&
+        message.indexOf("\"netSvcId\": 3") != -1 &&
+        message.indexOf("\"msgType\": 1") != -1) {
+        isValidMessage = true;
+
+        // Check if 'channelIds' is provided in the JSON message
+        int channelIdsStart = message.indexOf("\"channelIds\": [");
+        if (channelIdsStart != -1) {
+            channelIds.clear(); // Clear the default vector
+            int channelIdsEnd = message.indexOf("]", channelIdsStart);
+            String channelIdsStr = message.substring(channelIdsStart + 14, channelIdsEnd);
+            channelIdsStr.trim();
+
+            // Parse channel IDs from the string
+            while (channelIdsStr.length() > 0) {
+                int commaIndex = channelIdsStr.indexOf(",");
+                if (commaIndex == -1) {
+                    channelIds.push_back(channelIdsStr.toInt());
+                    break;
+                } else {
+                    channelIds.push_back(channelIdsStr.substring(0, commaIndex).toInt());
+                    channelIdsStr = channelIdsStr.substring(commaIndex + 1);
+                    channelIdsStr.trim();
+                }
+            }
+        }
+    }
+    // Check if the message is XML
+    else if (message.indexOf("<netSvcType>2</netSvcType>") != -1 &&
+             message.indexOf("<netSvcId>3</netSvcId>") != -1 &&
+             message.indexOf("<msgType>1</msgType>") != -1) {
+        isValidMessage = true;
+
+        // Check if 'channelIds' is provided in the XML message
+        int channelIdsStart = message.indexOf("<channelIds>");
+        if (channelIdsStart != -1) {
+            channelIds.clear(); // Clear the default vector
+            int channelIdsEnd = message.indexOf("</channelIds>", channelIdsStart);
+            String channelIdsStr = message.substring(channelIdsStart + 12, channelIdsEnd);
+            channelIdsStr.trim();
+
+            // Parse channel IDs from the XML string
+            while (channelIdsStr.length() > 0) {
+                int commaIndex = channelIdsStr.indexOf(",");
+                if (commaIndex == -1) {
+                    channelIds.push_back(channelIdsStr.toInt());
+                    break;
+                } else {
+                    channelIds.push_back(channelIdsStr.substring(0, commaIndex).toInt());
+                    channelIdsStr = channelIdsStr.substring(commaIndex + 1);
+                    channelIdsStr.trim();
+                }
+            }
+        }
+    }
+
+    if (isValidMessage) {
+        Serial.println("Valid message detected, publishing data...");
         readSensor();
-        publishDataMQTT();
+        publishDataMQTT(channelIds);
+    } else {
+        Serial.println("Invalid message received, ignoring...");
     }
 }
 
@@ -274,7 +409,8 @@ void loop() {
             mqtt_publish_status = false;
             mqttclient.connect(ip_address.c_str());
         }
-        if (publishDataMQTT()) {
+        std::vector<int> channelIds = {0, 1, 2, 3};
+        if (publishDataMQTT(channelIds)) {
             mqtt_publish_status = true;
         } else {
             mqtt_publish_status = false;

@@ -53,40 +53,74 @@ def process_json_sensor_message(message):
     """Process message in JSON format."""
     try:
         data = json.loads(message)
-        device_name = data.get("Device", "unknown")
-        tempSHT = data.get("TempSHT", "unknown")
-        tempBMP = data.get("TempBMP", "unknown")
-        humidity = data.get("Humidity", "unknown")
-        pressure = data.get("Pressure", "unknown")
-        altitude = data.get("Altitude", "unknown")
-        return device_name, tempSHT, tempBMP, humidity, pressure, altitude
+        
+        # Validate required fields
+        if (data.get("netSvcType") != 2 or
+            data.get("netSvcId") != 3 or
+            data.get("msgType") != 2):
+            raise ValueError("Invalid JSON payload structure")
+
+        # Extract fields
+        channel_ids = data.get("channelIds", [])
+        transducer_sample_datas = data.get("transducerSampleDatas", [])
+        timestamp = data.get("timestamp", "unknown")
+
+        # Map transducer data to specific channels
+        channel_data_map = dict(zip(channel_ids, transducer_sample_datas))
+        tempSHT = channel_data_map.get(0, "unknown")
+        tempBMP = channel_data_map.get(1, "unknown")
+        humidity = channel_data_map.get(2, "unknown")
+        pressure = channel_data_map.get(3, "unknown")
+
+        return channel_ids, tempSHT, tempBMP, humidity, pressure, timestamp
     except json.JSONDecodeError:
         raise ValueError("Invalid JSON payload")
 
 def process_xml_sensor_message(message):
-    # Process message in XML format
-    root = ET.fromstring(message)
-    debug = root.find("DEBUG")
-    if debug is None:
-        raise ValueError("DEBUG section not found in the XML payload")
-    device_name = debug.find("DeviceName").text if debug.find("DeviceName") is not None else "unknown"
-    tempSHT = debug.find("TempSHT").text if debug.find("TempSHT") is not None else "unknown"
-    tempBMP = debug.find("TempBMP").text if debug.find("TempBMP") is not None else "unknown"
-    humidity = debug.find("Humidity").text if debug.find("Humidity") is not None else "unknown"
-    pressure = debug.find("Pressure").text if debug.find("Pressure") is not None else "unknown"
-    altitude = debug.find("Altitude").text if debug.find("Altitude") is not None else "unknwon"  # Optional field
-    return device_name, tempSHT, tempBMP, humidity, pressure, altitude
+    """Process message in XML format."""
+    try:
+        root = ET.fromstring(message)
 
-def get_json_sensor_message(device_name, tempSHT, tempBMP, humidity, pressure, altitude):
+        # Validate required fields
+        if (root.find("netSvcType").text != "2" or
+            root.find("netSvcId").text != "3" or
+            root.find("msgType").text != "2"):
+            raise ValueError("Invalid XML payload structure")
+
+        # Extract fields
+        channel_ids = list(map(int, root.find("channelIds").text.split(", ")))
+        transducer_sample_datas = list(map(float, root.find("transducerSampleDatas").text.split(", ")))
+        timestamp = root.find("timestamp").text
+
+        # Map transducer data to specific channels
+        channel_data_map = dict(zip(channel_ids, transducer_sample_datas))
+        tempSHT = channel_data_map.get(0, "unknown")
+        tempBMP = channel_data_map.get(1, "unknown")
+        humidity = channel_data_map.get(2, "unknown")
+        pressure = channel_data_map.get(3, "unknown")
+
+        return channel_ids, tempSHT, tempBMP, humidity, pressure, timestamp
+    except ET.ParseError:
+        raise ValueError("Invalid XML payload")
+
+def get_json_sensor_message(device_name, tempSHT, tempBMP, humidity, pressure):
     """Constructs a JSON string with sensor data."""
+    from time import time
+    timestamp = int(time())  # Get UNIX timestamp (42 bits)
+    channel_ids = [0, 1, 2, 3]  # Channel IDs
+    transducer_sample_datas = [tempSHT, tempBMP, humidity, pressure]  # Transducer data
+
     return f"""{{
-        "Device": "{device_name}",
-        "LocalTime": "{get_local_time_string()}",
-        "TempSHT": {tempSHT},
-        "TempBMP": {tempBMP},
-        "Humidity": {humidity},
-        "Pressure": {pressure},
-        "Altitude": {altitude}
+        "netSvcType": 2,
+        "netSvcId": 3,
+        "msgType": 2,
+        "msgLength": 0,
+        "errorCode": 0,
+        "ncapId": 1,
+        "timId": 1,
+        "channelIds": {channel_ids},
+        "transducerSampleDatas": {transducer_sample_datas},
+        "timestamp": "{timestamp}0000"
     }}"""
 
 def get_local_time_string():
@@ -95,32 +129,81 @@ def get_local_time_string():
     return datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
 
 def get_xml_sensor_message(device_name, tempSHT, tempBMP, humidity, pressure):
+    """Constructs an XML string with sensor data."""
+    from time import time
+    timestamp = int(time())  # Get UNIX timestamp (42 bits)
+    channel_ids = "0, 1, 2, 3"  # Channel IDs as a comma-separated string
+    transducer_sample_datas = f"{tempSHT}, {tempBMP}, {humidity}, {pressure}"  # Transducer data as a comma-separated string
+
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <TEDS>
-    <DEBUG>
-        <DeviceName>{device_name}</DeviceName>
-        <LocalTime>"{get_local_time_string()}"</LocalTime>
-        <TempSHT>{tempSHT:.2f}</TempSHT>
-        <TempBMP>{tempBMP:.2f}</TempBMP>
-        <Humidity>{humidity:.2f}</Humidity>
-        <Pressure>{pressure:.2f}</Pressure>
-    </DEBUG>
+    <netSvcType>2</netSvcType>
+    <netSvcId>3</netSvcId>
+    <msgType>2</msgType>
+    <msgLength>0</msgLength>
+    <errorCode>0</errorCode>
+    <ncapId>1</ncapId>
+    <timId>1</timId>
+    <channelIds>{channel_ids}</channelIds>
+    <transducerSampleDatas>{transducer_sample_datas}</transducerSampleDatas>
+    <timestamp>{timestamp}0000</timestamp>
 </TEDS>"""
 
-def get_json_actuator_message(state):
-    """Constructs a JSON string with sensor data."""
+def get_json_actuator_message(state, timeout=0):
+    """Constructs a JSON string with actuator command data."""
+    sampling_mode = 1 if state.lower() == "on" else 0  # Set samplingMode based on state
     return f"""{{
-        "Type": "CMD",
-        "LocalTime": "{get_local_time_string()}",
-        "State": {state},
+        "netSvcType": 2,
+        "netSvcId": 1,
+        "msgType": 1,
+        "msgLength": 0,
+        "ncapId": 1,
+        "timId": 2,
+        "channelId": 1,
+        "samplingMode": {sampling_mode},
+        "timeout": {timeout}
     }}"""
 
 def request_sensor_data_message():
-    data_request = f"""{{
-        "Type": "REQ_DATA",
-        "LocalTime": "{get_local_time_string()}",
+    """Constructs a JSON string to request sensor data."""
+    # Define channel IDs as a variable for easy modification
+    channel_ids = [0, 1, 2, 3]  # Modify this list as needed
+
+    return f"""{{
+        "netSvcType": 2,
+        "netSvcId": 3,
+        "msgType": 1,
+        "msgLength": 0,
+        "ncapId": 1,
+        "timId": 1,
+        "channelIds": {channel_ids},
+        "timeout": 0,
+        "samplingMode": 0
     }}"""
     
+def parse_heater_state_message(message):
+    """Parse the heater state message and set the heater state."""
+    try:
+        data = json.loads(message)  # Parse the message as JSON
+
+        # Validate required fields
+        if (data.get("netSvcType") == 2 and
+            data.get("netSvcId") == 1 and
+            data.get("msgType") == 2 and
+            data.get("channelId") == 1):
+            
+            # Extract transducer sample data
+            transducer_sample_data = data.get("transducersampleData")
+            if transducer_sample_data == 1:
+                return True  # Heater is ON
+            elif transducer_sample_data == 0:
+                return False  # Heater is OFF
+            else:
+                raise ValueError("Invalid transducersampleData value")
+        else:
+            raise ValueError("Invalid message structure")
+    except json.JSONDecodeError:
+        raise ValueError("Invalid JSON payload")
 
 def prepare_sensor_message(device_name, tempSHT, tempBMP, humidity, pressure, altitude=-10):
     # Prepare message in proper XML format with header
@@ -384,10 +467,11 @@ class Greenhouse:
             print(f"Set target temperature : {self.target_temperature }")
         elif message.topic == TOPIC_HEATER_STATE:
             print(f"Received heater status: {payload}")
-            if "on" in payload:
-                self.heater_state = True
-            elif "off" in payload:
-                self.heater_state = False
+            try:
+                self.heater_state = parse_heater_state_message(payload)
+                print(f"Heater state set to: {'ON' if self.heater_state else 'OFF'}")
+            except ValueError as e:
+                print(f"Error parsing heater state message: {e}")
 
 def get_coordinates(city):
     """
