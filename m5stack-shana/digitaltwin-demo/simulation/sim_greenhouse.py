@@ -378,19 +378,19 @@ class Greenhouse:
         self.kSHT = min(5, self.kSHT) # Ensure gain stays within a reasonable range
         self.kSHT = max(-5, self.kSHT)
         self.tau = max(1, self.tau - 0.1 * error_SHT)  # Adjust time constant, ensuring it stays positive
-        self.inside_temperatureSHT = actual_inside_temperatureSHT  # Correct the predicted temperature
+        #self.inside_temperatureSHT = actual_inside_temperatureSHT  # Correct the predicted temperature
 
         # Update for inside_temperatureBMP
         error_BMP = actual_inside_temperatureBMP - self.inside_temperatureBMP
         self.kBMP += 0.01 * error_BMP  # Adjust gain slightly based on error
         self.kBMP = min(5, self.kBMP)  # Ensure gain stays within a reasonable range
         self.kBMP = max(-5, self.kBMP)
-        self.inside_temperatureBMP = actual_inside_temperatureBMP
+        #self.inside_temperatureBMP = actual_inside_temperatureBMP
 
         # Update for inside_humidity
         error_humidity = actual_humidity - self.inside_humidity
         self.kHumidity += 0.01 * error_humidity
-        self.inside_humidity = actual_humidity
+        #self.inside_humidity = actual_humidity
 
         print(f"Updated inside conditions: TempSHT: {self.inside_temperatureSHT:.2f}, TempBMP: {self.inside_temperatureBMP:.2f}, Humidity: {self.inside_humidity:.2f}, Pressure: {self.inside_pressure:.2f}, outside: {self.outside_temperature:.2f},")
         print(f"Updated Gain values: kSHT: {self.kSHT:.2f}, kBMP: {self.kBMP:.2f}, kHumidity: {self.kHumidity:.2f}, kPressure: {self.kPressure:.2f}")
