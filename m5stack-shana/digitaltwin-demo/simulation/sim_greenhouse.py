@@ -305,7 +305,7 @@ class Greenhouse:
         self.kBMP = 0.5
         self.kHumidity = 0.001
         self.kPressure = 0.001
-        self.tau = 10  # Time constant of the system
+        self.tau = 1  # Time constant of the system
         self.time_step = 1  # Time step for simulation
         self.last_update_time = time()  # Track the last update time
         self.dt_sensor_topic = dt_sensor_topic
@@ -332,6 +332,7 @@ class Greenhouse:
         # Predict inside_temperatureSHT
         delta_temp_SHT = (self.kSHT * (self.target_temperature + aircon_effect + heater_effect - self.inside_temperatureSHT) +
                           (self.outside_temperature - self.inside_temperatureSHT) / self.tau) * elapsed_time
+        
         self.inside_temperatureSHT += delta_temp_SHT
 
         # Predict inside_temperatureBMP
@@ -346,7 +347,7 @@ class Greenhouse:
         # Predict inside_pressure
         delta_pressure = self.kPressure * (self.target_pressure - self.inside_pressure) * elapsed_time
         self.inside_pressure += delta_pressure
-
+        print(f'predicted delta_temp_SHT: {delta_temp_SHT:.2f}, delta_temp_BMP: {delta_temp_BMP:.2f}, delta_humidity: {delta_humidity:.2f}, delta_pressure: {delta_pressure:.2f}")')
         # Correct predictions with actual data
         self.inside_humidity = max(0, min(100, self.inside_humidity))  # Ensure humidity stays within 0-100%
         self.inside_pressure = max(9000, min(200000, self.inside_pressure))  # Ensure pressure stays within realistic bounds
@@ -393,11 +394,7 @@ class Greenhouse:
 
         print(f"Updated inside conditions: TempSHT: {self.inside_temperatureSHT:.2f}, TempBMP: {self.inside_temperatureBMP:.2f}, Humidity: {self.inside_humidity:.2f}, Pressure: {self.inside_pressure:.2f}, outside: {self.outside_temperature:.2f},")
         print(f"Updated Gain values: kSHT: {self.kSHT:.2f}, kBMP: {self.kBMP:.2f}, kHumidity: {self.kHumidity:.2f}, kPressure: {self.kPressure:.2f}")
-        # reset model to match pt
-        self.inside_temperatureSHT = actual_inside_temperatureSHT
-        self.inside_temperatureBMP = actual_inside_temperatureBMP
-        self.inside_humidity = actual_humidity
- 
+
         self.update_iteration += 1
         if self.update_iteration > 20:
             self.activate_control = True
