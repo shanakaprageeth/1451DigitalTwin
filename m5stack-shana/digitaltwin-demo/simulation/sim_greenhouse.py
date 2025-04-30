@@ -330,14 +330,16 @@ class Greenhouse:
         heater_effect = 5 if self.heater_state else 0
 
         # Predict inside_temperatureSHT
-        delta_temp_SHT = (self.kSHT * (self.target_temperature + aircon_effect + heater_effect - self.inside_temperatureSHT) +
-                          (self.outside_temperature - self.inside_temperatureSHT) / self.tau) * elapsed_time
+        delta_temp_SHT = self.kSHT * (self.target_temperature + aircon_effect + heater_effect - self.inside_temperatureSHT)
+                          # +
+                          #(self.outside_temperature - self.inside_temperatureSHT) / self.tau) * elapsed_time
         
         self.inside_temperatureSHT += delta_temp_SHT
 
         # Predict inside_temperatureBMP
-        delta_temp_BMP = (self.kBMP * (self.target_temperature + aircon_effect + heater_effect - self.inside_temperatureBMP) +
-                          (self.outside_temperature - self.inside_temperatureBMP) / self.tau) * elapsed_time
+        delta_temp_BMP = self.kBMP * (self.target_temperature + aircon_effect + heater_effect - self.inside_temperatureBMP)
+                          #+
+                          #(self.outside_temperature - self.inside_temperatureBMP) / self.tau) * elapsed_time
         self.inside_temperatureBMP += delta_temp_BMP
 
         # Predict inside_humidity
@@ -375,22 +377,23 @@ class Greenhouse:
         # Update for inside_temperatureSHT
         error_SHT = actual_inside_temperatureSHT - self.inside_temperatureSHT
         self.kSHT += 0.01 * error_SHT  # Adjust gain slightly based on error
-        self.kSHT = min(5, self.kSHT) # Ensure gain stays within a reasonable range
-        self.kSHT = max(-5, self.kSHT)
-        self.tau = max(1, self.tau - 0.1 * error_SHT)  # Adjust time constant, ensuring it stays positive
-        #self.inside_temperatureSHT = actual_inside_temperatureSHT  # Correct the predicted temperature
+        self.kSHT = min(0.1, self.kSHT) # Ensure gain stays within a reasonable range
+        self.kSHT = max(-0.1, self.kSHT)
+        self.tau = min(100, self.tau - 0.1 * error_SHT)  # Adjust time constant, ensuring it stays positive
+        self.tau = max(1, self.tau)
+        self.inside_temperatureSHT = actual_inside_temperatureSHT  # Correct the predicted temperature
 
         # Update for inside_temperatureBMP
         error_BMP = actual_inside_temperatureBMP - self.inside_temperatureBMP
         self.kBMP += 0.01 * error_BMP  # Adjust gain slightly based on error
-        self.kBMP = min(5, self.kBMP)  # Ensure gain stays within a reasonable range
-        self.kBMP = max(-5, self.kBMP)
-        #self.inside_temperatureBMP = actual_inside_temperatureBMP
+        self.kBMP = min(0.1, self.kBMP)  # Ensure gain stays within a reasonable range
+        self.kBMP = max(-0.1, self.kBMP)
+        self.inside_temperatureBMP = actual_inside_temperatureBMP
 
         # Update for inside_humidity
         error_humidity = actual_humidity - self.inside_humidity
         self.kHumidity += 0.01 * error_humidity
-        #self.inside_humidity = actual_humidity
+        self.inside_humidity = actual_humidity
 
         print(f"Updated inside conditions: TempSHT: {self.inside_temperatureSHT:.2f}, TempBMP: {self.inside_temperatureBMP:.2f}, Humidity: {self.inside_humidity:.2f}, Pressure: {self.inside_pressure:.2f}, outside: {self.outside_temperature:.2f},")
         print(f"Updated Gain values: kSHT: {self.kSHT:.2f}, kBMP: {self.kBMP:.2f}, kHumidity: {self.kHumidity:.2f}, kPressure: {self.kPressure:.2f}")
