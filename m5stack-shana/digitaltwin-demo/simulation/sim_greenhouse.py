@@ -274,9 +274,9 @@ def digital_twin_sim(
         if i % 60 == 0:
             if last_sensor_data_iteration == greenhouse.update_iteration:
                 print(f"Sensor data not received for {i} iterations. Requesting sensor data.")
-                greenhouse.request_sensor_data()
             last_sensor_data_iteration = greenhouse.update_iteration
         greenhouse.predict_system()
+        greenhouse.request_sensor_data()
         greenhouse.publish_digital_twin()
         sleep(1)
     print("Stopping MQTT client loop", flush=True)
@@ -403,7 +403,8 @@ class Greenhouse:
             self.activate_control = True
 
     def request_sensor_data(self):
-        payload = request_sensor_data_message()
+        payload = request_sensor_data_message().replace("\n","")
+        #payload = '{"netSvcType": 2, "netSvcId": 3,"msgType": 1,"msgLength": 0,"ncapId": 1,"timId": 1,"channelIds": [0, 1, 2, 3],"timeout": 0,"samplingMode": 0}'
         print(f"Requesting sensor data: {TOPIC_CORE1_SENSOR_DATA} {TOPIC_CORE2_SENSOR_DATA}  {payload}")
         self.client.publish(TOPIC_CORE1_SENSOR_DATA, payload)
         self.client.publish(TOPIC_CORE2_SENSOR_DATA, payload)

@@ -18,25 +18,27 @@
 
 // constants
 // loop delay
-#define LOW_POWER_MODE false
+#define LOW_POWER_MODE true
 #if LOW_POWER_MODE
-const int loop_delay = 60000; // 60 seconds
+const int loop_delay = 1000; // 60 seconds
 const bool low_power_mode = true; // low power mode
+const bool aync_pub = false;
 #else
-const int loop_delay = 20000; // 10 seconds
+const int loop_delay = 1000; // 10 seconds
 const bool low_power_mode = false; // low power mode
+const bool aync_pub = true;
 #endif
 
 // device name
-const char* device_name = "core_2";
+const char* device_name = "core_1";
 // Wi-Fi settings
 const char* ssid = "GL-AR750-310";
 const char* password = "goodlife"; 
 // mqtt settings
 const char* mqtt_server = "192.168.8.101";
 const int mqtt_port = 1883;
-//String mqtt_topic_name = "_1451DT/" + (String)device_name + "/sensor/data";
-String mqtt_topic_name = "_1451DT/" + (String)device_name + "/sensor/data";
+String mqtt_sub_topic_name = "_1451DT/" + (String)device_name + "/sensor/data";
+String mqtt_pub_topic_name = "_1451DT/" + (String)device_name + "/sensor/data";
 // setup ntp and timezone
 const char* ntpServer = "ntp.nict.jp";
 const long  gmtOffset_sec = 3600 * 9;
@@ -119,9 +121,11 @@ void setup() {
     mqttclient.setServer(mqtt_server, mqtt_port);
     mqttclient.setCallback(mqttCallback);
     if (mqttclient.connect(ip_address.c_str())) {
-        mqttclient.subscribe(mqtt_topic_name.c_str());
+        delay(1000);
+        mqttclient.publish(mqtt_pub_topic_name.c_str(),"test");
+        mqttclient.subscribe(mqtt_sub_topic_name.c_str());
         Serial.print("Subscribed to topic: ");
-        Serial.println(mqtt_topic_name);
+        Serial.println(mqtt_sub_topic_name);
     }
     if (low_power_mode){
         M5.Lcd.writecommand(ILI9341_DISPOFF);
@@ -129,7 +133,8 @@ void setup() {
     }
     else{
         setupDisplay();
-    }  
+    }
+    mqttclient.loop();
 }
 
 // Function to read sensor data
@@ -164,7 +169,7 @@ String generateFormattedMessage(){
         "\n SSID:   " + String(ssid) +
         "\n IP:     " + String(ip_address) + 
         "\n MQTT:   " + String(mqtt_server) + ":"+ String(mqtt_port) +
-        "\n  TOPIC: " + String(mqtt_topic_name) +
+        "\n  TOPIC: " + String(mqtt_pub_topic_name) +
         "\n  CONN:  " + String(mqttclient.connected()) +
         "\n LocalTime:" + getLocalTimeString() +
         "\n TempSHT: " + String(sht4.cTemp) + 
@@ -306,19 +311,19 @@ bool publishDataMQTT(std::vector<int>& channelIds){
     if (mqttclient.connected()) {
         //const char* mqtt_message = generateMQTTMessageXML(channelIds).c_str();
         //Serial.print(mqtt_message);
-        //mqttclient.publish(mqtt_topic_name.c_str(), mqtt_message);
-        mqttclient.publish(mqtt_topic_name.c_str(), generateMQTTMessageJSON(channelIds).c_str());
+        //mqttclient.publish(mqtt_pub_topic_name.c_str(), mqtt_message);
+        mqttclient.publish(mqtt_pub_topic_name.c_str(), generateMQTTMessageJSON(channelIds).c_str());
         return true;
     }
     return false;
 }
 
 void mqttCallback(char* topic, byte* payload, unsigned int length) {
+    Serial.print("Message received on topic: ");
     String message;
     for (unsigned int i = 0; i < length; i++) {
         message += (char)payload[i];
     }
-    Serial.print("Message received on topic: ");
     Serial.println(topic);
     Serial.print("Message: ");
     Serial.println(message);
@@ -400,37 +405,43 @@ void loop() {
     if (!mqttclient.connected()) {
         mqtt_publish_status = false;
         if (mqttclient.connect(ip_address.c_str())) {
-            mqttclient.subscribe(mqtt_topic_name.c_str()); // Re-subscribe if disconnected
+            delay(1000);
+            Serial.print("resubscribing to :");
+            Serial.println(mqtt_pub_topic_name.c_str());
+            mqttclient.subscribe(mqtt_sub_topic_name.c_str()); // Re-subscribe if disconnected
         }
     }
-    mqttclient.loop(); // Process incoming MQTT messages
-
-    if (readSensor()) {
-        if (!mqttclient.connected()) {
-            mqtt_publish_status = false;
-            mqttclient.connect(ip_address.c_str());
-        }
-        std::vector<int> channelIds = {0, 1, 2, 3};
-        if (publishDataMQTT(channelIds)) {
-            mqtt_publish_status = true;
-        } else {
-            mqtt_publish_status = false;
-        }
-        // Update display only if 1 minute has passed
-        if (low_power_mode){
-        }
-        else{
-            publishDataSerial();
-            if (current_time - last_display_update >= 60000) {
-                publishDataDisplay();
-                last_display_update = current_time;
+    mqttclient.loop();
+     // Process incoming MQTT messages
+    //mqttclient.publish(mqtt_pub_topic_name.c_str(),"test");
+    if (aync_pub){
+        if (readSensor()) {
+            if (!mqttclient.connected()) {
+                mqtt_publish_status = false;
+                mqttclient.connect(ip_address.c_str());
             }
+            std::vector<int> channelIds = {0, 1, 2, 3};
+            if (publishDataMQTT(channelIds)) {
+                mqtt_publish_status = true;
+            } else {
+                mqtt_publish_status = false;
+            }
+            // Update display only if 1 minute has passed
+            if (low_power_mode){
+            }
+            else{
+                publishDataSerial();
+                if (current_time - last_display_update >= 60000) {
+                    publishDataDisplay();
+                    last_display_update = current_time;
+                }
+            }
+            mqtt_publish_status = false;
         }
-        mqtt_publish_status = false;
-    }
-    else {
-        Serial.println("Failed to read sensor data");
-        mqtt_publish_status = false;
+        else {
+            Serial.println("Failed to read sensor data");
+            mqtt_publish_status = false;
+        }
     }
     delay(loop_delay);
 }
