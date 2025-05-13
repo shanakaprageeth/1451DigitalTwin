@@ -169,7 +169,7 @@
         "rh": 0,
         "inputs": 0,
         "x": 100,
-        "y": 240,
+        "y": 340,
         "wires": [
             [
                 "3035d037b0a79e07"
@@ -201,7 +201,7 @@
         "diff": false,
         "className": "",
         "x": 730,
-        "y": 180,
+        "y": 280,
         "wires": []
     },
     {
@@ -213,7 +213,7 @@
         "attr": "",
         "chr": "",
         "x": 290,
-        "y": 240,
+        "y": 340,
         "wires": [
             [
                 "ce4a8c74274d0c40",
@@ -234,7 +234,7 @@
         "finalize": "",
         "libs": [],
         "x": 500,
-        "y": 240,
+        "y": 340,
         "wires": [
             [
                 "dffe1cab2486297c",
@@ -257,7 +257,7 @@
         "attr": "",
         "chr": "",
         "x": 280,
-        "y": 280,
+        "y": 380,
         "wires": [
             [
                 "ce4a8c74274d0c40"
@@ -289,7 +289,7 @@
         "diff": false,
         "className": "",
         "x": 730,
-        "y": 220,
+        "y": 320,
         "wires": []
     },
     {
@@ -306,7 +306,7 @@
         "rh": 0,
         "inputs": 0,
         "x": 100,
-        "y": 420,
+        "y": 520,
         "wires": [
             [
                 "125ef743930c777d"
@@ -338,7 +338,7 @@
         "diff": false,
         "className": "",
         "x": 730,
-        "y": 360,
+        "y": 460,
         "wires": []
     },
     {
@@ -350,7 +350,7 @@
         "attr": "",
         "chr": "",
         "x": 290,
-        "y": 420,
+        "y": 520,
         "wires": [
             [
                 "b97524d2103da84f",
@@ -371,7 +371,7 @@
         "finalize": "",
         "libs": [],
         "x": 500,
-        "y": 420,
+        "y": 520,
         "wires": [
             [
                 "f582f9888aabdf2b",
@@ -394,7 +394,7 @@
         "attr": "",
         "chr": "",
         "x": 300,
-        "y": 480,
+        "y": 580,
         "wires": [
             [
                 "b97524d2103da84f"
@@ -426,7 +426,7 @@
         "diff": false,
         "className": "",
         "x": 730,
-        "y": 400,
+        "y": 500,
         "wires": []
     },
     {
@@ -443,7 +443,7 @@
         "rh": 0,
         "inputs": 0,
         "x": 930,
-        "y": 220,
+        "y": 320,
         "wires": [
             [
                 "34505d2a59d6c1a9"
@@ -459,7 +459,7 @@
         "attr": "",
         "chr": "",
         "x": 1100,
-        "y": 220,
+        "y": 320,
         "wires": [
             [
                 "eb21232a75b5e5cc",
@@ -476,7 +476,7 @@
         "attr": "",
         "chr": "",
         "x": 1110,
-        "y": 260,
+        "y": 360,
         "wires": [
             [
                 "eb21232a75b5e5cc"
@@ -496,7 +496,7 @@
         "finalize": "",
         "libs": [],
         "x": 1310,
-        "y": 220,
+        "y": 320,
         "wires": [
             [
                 "5063b8b39cb3f8c7",
@@ -535,7 +535,7 @@
         "diff": false,
         "className": "",
         "x": 1560,
-        "y": 180,
+        "y": 280,
         "wires": []
     },
     {
@@ -563,7 +563,7 @@
         "diff": false,
         "className": "",
         "x": 1560,
-        "y": 220,
+        "y": 320,
         "wires": []
     },
     {
@@ -580,7 +580,7 @@
         "rh": 0,
         "inputs": 0,
         "x": 110,
-        "y": 560,
+        "y": 220,
         "wires": [
             [
                 "fa3d78b42b744047"
@@ -605,7 +605,7 @@
         "fontSize": 16,
         "color": "#000000",
         "x": 750,
-        "y": 560,
+        "y": 220,
         "wires": []
     },
     {
@@ -622,7 +622,7 @@
         "rh": 0,
         "inputs": 0,
         "x": 950,
-        "y": 560,
+        "y": 220,
         "wires": [
             [
                 "5b12e8f64512826f"
@@ -647,7 +647,7 @@
         "fontSize": 16,
         "color": "#000000",
         "x": 1570,
-        "y": 560,
+        "y": 220,
         "wires": []
     },
     {
@@ -671,7 +671,7 @@
         "step": 1,
         "className": "",
         "x": 90,
-        "y": 100,
+        "y": 60,
         "wires": [
             [
                 "8b323dd9ca2eda69"
@@ -693,7 +693,7 @@
         "expiry": "",
         "broker": "bdea7a73f727af35",
         "x": 1500,
-        "y": 100,
+        "y": 60,
         "wires": []
     },
     {
@@ -712,8 +712,8 @@
         "interpolate": "linear",
         "nodata": "",
         "dot": false,
-        "ymin": "15",
-        "ymax": "30",
+        "ymin": "10",
+        "ymax": "40",
         "removeOlder": "2",
         "removeOlderPoints": "10000",
         "removeOlderUnit": "3600",
@@ -735,7 +735,7 @@
         "useDifferentColor": false,
         "className": "",
         "x": 1560,
-        "y": 400,
+        "y": 500,
         "wires": [
             []
         ]
@@ -753,7 +753,7 @@
         "finalize": "",
         "libs": [],
         "x": 530,
-        "y": 560,
+        "y": 220,
         "wires": [
             [
                 "411714595a058981"
@@ -773,7 +773,7 @@
         "finalize": "",
         "libs": [],
         "x": 1330,
-        "y": 560,
+        "y": 220,
         "wires": [
             [
                 "0b1b22b59b418a3c"
@@ -789,7 +789,7 @@
         "action": "obj",
         "pretty": true,
         "x": 290,
-        "y": 560,
+        "y": 220,
         "wires": [
             [
                 "f67be04f7e9a4f0a"
@@ -805,11 +805,31 @@
         "action": "obj",
         "pretty": false,
         "x": 1130,
-        "y": 560,
+        "y": 220,
         "wires": [
             [
                 "c1a927715eef0a0b"
             ]
+        ]
+    },
+    {
+        "id": "1f3f1e644ac8636c",
+        "type": "exec",
+        "z": "49317004d5317078",
+        "command": "/home/shanaka/repos/1451DigitalTwin/ci_tests.sh setup_sim",
+        "addpay": "",
+        "append": "",
+        "useSpawn": "true",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Simulation",
+        "x": 1270,
+        "y": 140,
+        "wires": [
+            [],
+            [],
+            []
         ]
     }
 ]

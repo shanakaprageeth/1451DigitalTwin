@@ -570,7 +570,7 @@
         "id": "c9e1b0751bd8d168",
         "type": "mqtt in",
         "z": "49317004d5317078",
-        "name": "sys_control_mqtt_in",
+        "name": "pt_actuator_mqtt_in",
         "topic": "_1451DT/room/heater/state",
         "qos": "0",
         "datatype": "auto-detect",
@@ -583,8 +583,7 @@
         "y": 560,
         "wires": [
             [
-                "fa3d78b42b744047",
-                "344e4ef379777a89"
+                "fa3d78b42b744047"
             ]
         ]
     },
@@ -605,7 +604,7 @@
         "font": "",
         "fontSize": 16,
         "color": "#000000",
-        "x": 610,
+        "x": 750,
         "y": 560,
         "wires": []
     },
@@ -613,7 +612,7 @@
         "id": "a426584d8031c91d",
         "type": "mqtt in",
         "z": "49317004d5317078",
-        "name": "sys_control_mqtt_in",
+        "name": "dt_actuator_mqtt_in",
         "topic": "_1451DT/digitaltwin/heater/state",
         "qos": "0",
         "datatype": "auto-detect",
@@ -647,7 +646,7 @@
         "font": "",
         "fontSize": 16,
         "color": "#000000",
-        "x": 1550,
+        "x": 1570,
         "y": 560,
         "wires": []
     },
@@ -671,8 +670,8 @@
         "max": "25",
         "step": 1,
         "className": "",
-        "x": 590,
-        "y": 660,
+        "x": 90,
+        "y": 100,
         "wires": [
             [
                 "8b323dd9ca2eda69"
@@ -693,8 +692,8 @@
         "correl": "",
         "expiry": "",
         "broker": "bdea7a73f727af35",
-        "x": 840,
-        "y": 660,
+        "x": 1500,
+        "y": 100,
         "wires": []
     },
     {
@@ -713,11 +712,11 @@
         "interpolate": "linear",
         "nodata": "",
         "dot": false,
-        "ymin": "15",
-        "ymax": "30",
-        "removeOlder": "50",
+        "ymin": "10",
+        "ymax": "40",
+        "removeOlder": "2",
         "removeOlderPoints": "10000",
-        "removeOlderUnit": "60",
+        "removeOlderUnit": "3600",
         "cutout": 0,
         "useOneColor": false,
         "useUTC": false,
@@ -735,8 +734,8 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 860,
-        "y": 100,
+        "x": 1560,
+        "y": 400,
         "wires": [
             []
         ]
@@ -753,7 +752,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 430,
+        "x": 530,
         "y": 560,
         "wires": [
             [
@@ -773,7 +772,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1290,
+        "x": 1330,
         "y": 560,
         "wires": [
             [
@@ -789,7 +788,7 @@
         "property": "payload",
         "action": "obj",
         "pretty": true,
-        "x": 270,
+        "x": 290,
         "y": 560,
         "wires": [
             [
@@ -812,21 +811,5 @@
                 "c1a927715eef0a0b"
             ]
         ]
-    },
-    {
-        "id": "344e4ef379777a89",
-        "type": "debug",
-        "z": "49317004d5317078",
-        "name": "debug 1",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 720,
-        "y": 500,
-        "wires": []
     }
 ]

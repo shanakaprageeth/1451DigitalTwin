@@ -9,6 +9,7 @@ BASEDIR=$(dirname $(realpath "$0"))
 export PYTHONPATH=$BASEDIR:$PYTHONPATH
 
 install_dependencies(){
+    cd $BASEDIR/
     sudo apt-get install -y python3 python3-pip python3-venv npm
     python3 -m venv .venv
     source .venv/bin/activate
@@ -41,6 +42,7 @@ setup_heater_control(){
 }
 
 setup_sim(){
+    source $BASEDIR/.venv/bin/activate
     cd $BASEDIR/m5stack-shana/digitaltwin-demo/simulation
     python3 sim_greenhouse.py --config $BASEDIR/m5stack-shana/digitaltwin-demo/config.yml
 }
@@ -126,7 +128,7 @@ case "$1" in
         ;;
     *)
         echo "Invalid argument: $1"
-        echo "Usage: $PROGRAM_NAME {unittests|systemtests|install_dependencies|all|nodered}"
+        echo "Usage: $PROGRAM_NAME {unittests|systemtests|install_dependencies|all|nodered|setup_local_server|setup_heater_control|setup_sim}"
         exit 1
         ;;
 esac
