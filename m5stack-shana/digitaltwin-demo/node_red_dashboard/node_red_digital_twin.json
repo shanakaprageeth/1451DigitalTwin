@@ -816,7 +816,7 @@
         "id": "1f3f1e644ac8636c",
         "type": "exec",
         "z": "49317004d5317078",
-        "command": "/home/shanaka/repos/1451DigitalTwin/ci_tests.sh setup_sim",
+        "command": "python3 m5stack-shana/digitaltwin-demo/simulation/sim_greenhouse.py --config m5stack-shana/digitaltwin-demo/config.yml",
         "addpay": "",
         "append": "",
         "useSpawn": "true",
@@ -824,12 +824,64 @@
         "winHide": false,
         "oldrc": false,
         "name": "Simulation",
-        "x": 1270,
+        "x": 1170,
         "y": 140,
         "wires": [
-            [],
-            [],
-            []
+            [
+                "e5bfa494a54a7f82"
+            ],
+            [
+                "e5bfa494a54a7f82"
+            ],
+            [
+                "e5bfa494a54a7f82"
+            ]
+        ]
+    },
+    {
+        "id": "e5bfa494a54a7f82",
+        "type": "debug",
+        "z": "49317004d5317078",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 1350,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "defd6c1620a23b89",
+        "type": "inject",
+        "z": "49317004d5317078",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 1010,
+        "y": 140,
+        "wires": [
+            [
+                "1f3f1e644ac8636c"
+            ]
         ]
     }
 ]
