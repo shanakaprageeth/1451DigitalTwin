@@ -1,0 +1,32 @@
+
+mqtthost: 192.168.8.101
+mqttport: 1883
+### MQTT Configuration
+#mqtt_tls: false
+#mqttusername: None
+#mqttpassword: None
+## Sim Configuration
+#iterations: "inf"
+city : 'Kawasaki'
+# Switchbot config
+switchbot:
+  token: ''
+  secret: ''
+  plug_id: '34B7DAD4C62E'
+  bot_id: 'C9690A9783EC'
+
+# 21-23-25
+# defaults
+target_temp: 23
+deadband: 2
+
+### MQTT Topics
+mqtt_topics:
+  all_data: "_1451DT/#"
+  sensor_data_core_1: "_1451DT/core_1/sensor/data"
+  sensor_data_core_2: "_1451DT/core_2/sensor/data"
+  digital_twin_sensor_data: "_1451DT/digitaltwin/sensor/data"
+  digital_twin_control_input: "_1451DT/digitaltwin/temp/control"
+  digital_twin_heater_state: "_1451DT/digitaltwin/heater/state"
+  room_heater_control: "_1451DT/room/heater/control"
+  room_heater_state: "_1451DT/room/heater/state"

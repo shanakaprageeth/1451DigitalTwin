@@ -1,0 +1,887 @@
+[
+    {
+        "id": "49317004d5317078",
+        "type": "tab",
+        "label": "Flow",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "bdea7a73f727af35",
+        "type": "mqtt-broker",
+        "name": "localhost_mosquitto",
+        "broker": "127.0.0.1",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "92679c3d6723a50e",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "636623131d75b2b7",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-dark",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#097479",
+                    "value": "#097479",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#097479",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#0eb8c0",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#555555",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#eeeeee",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#097479",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "52560e4898df94f5",
+        "type": "ui_group",
+        "name": "MainDashboard",
+        "tab": "92679c3d6723a50e",
+        "order": 1,
+        "disp": true,
+        "width": "9",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "9ba9cf9898ae1b98",
+        "type": "mqtt in",
+        "z": "49317004d5317078",
+        "name": "core_1_mqtt_in",
+        "topic": "_1451DT/core_1/sensor/data",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "bdea7a73f727af35",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 100,
+        "y": 340,
+        "wires": [
+            [
+                "3035d037b0a79e07"
+            ]
+        ]
+    },
+    {
+        "id": "dffe1cab2486297c",
+        "type": "ui_gauge",
+        "z": "49317004d5317078",
+        "name": "",
+        "group": "52560e4898df94f5",
+        "order": 0,
+        "width": "4",
+        "height": "3",
+        "gtype": "gage",
+        "title": "PT_sensor1_temp_SHT",
+        "label": "C",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "50",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 730,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "3035d037b0a79e07",
+        "type": "xml",
+        "z": "49317004d5317078",
+        "name": "core_1_xml_parse",
+        "property": "payload",
+        "attr": "",
+        "chr": "",
+        "x": 290,
+        "y": 340,
+        "wires": [
+            [
+                "ce4a8c74274d0c40",
+                "f018808b21e0aabe"
+            ]
+        ]
+    },
+    {
+        "id": "ce4a8c74274d0c40",
+        "type": "function",
+        "z": "49317004d5317078",
+        "name": "parse_sensor_1",
+        "func": "if (msg.payload && msg.payload.TEDS) {\n    let transducerData = msg.payload.TEDS.transducerSampleDatas;\n    let msg1 = { topic: \"sensor_1_tempSHT\", payload: transducerData[0] || 'N/A' };\n    let msg2 = { topic: \"sensor_1_tempBMP\", payload: transducerData[1] || 'N/A' };\n    let msg3 = { topic: \"sensor_1_Humidity\", payload: transducerData[2] || 'N/A' };\n    let msg4 = { topic: \"sensor_1_Pressure\", payload: transducerData[3] || 'N/A' };\n    return [msg1, msg2, msg3, msg4];\n} else if (msg.payload && msg.payload.root) {\n    let transducerData = msg.payload.root.transducerSampleDatas;\n    let msg1 = { topic: \"sensor_1_tempSHT\", payload: transducerData[0] || 'N/A' };\n    let msg2 = { topic: \"sensor_1_tempBMP\", payload: transducerData[1] || 'N/A' };\n    let msg3 = { topic: \"sensor_1_Humidity\", payload: transducerData[2] || 'N/A' };\n    let msg4 = { topic: \"sensor_1_Pressure\", payload: transducerData[3] || 'N/A' };\n    return [msg1, msg2, msg3, msg4];\n} else if (msg.payload && typeof msg.payload === 'object') {\n    // Handle the case where msg.payload is a JSON object\n    console.log(\"msg.payload (JSON):\", msg.payload);\n\n    // Ensure the transducerSampleDatas property exists in msg.payload\n    let transducerData = (msg.payload.transducerSampleDatas || []);\n    let msg1 = { topic: \"sensor_1_tempSHT\", payload: transducerData[0] || 'N/A' };\n    let msg2 = { topic: \"sensor_1_tempBMP\", payload: transducerData[1] || 'N/A' };\n    let msg3 = { topic: \"sensor_1_Humidity\", payload: transducerData[2] || 'N/A' };\n    let msg4 = { topic: \"sensor_1_Pressure\", payload: transducerData[3] || 'N/A' };\n    return [msg1, msg2, msg3, msg4];\n} else {\n    // Handle case where msg.payload is not in the expected format\n    console.log(\"Unexpected payload format:\", msg.payload);\n    return null;\n}",
+        "outputs": 5,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 340,
+        "wires": [
+            [
+                "dffe1cab2486297c",
+                "56a8c6e9338c804a"
+            ],
+            [
+                "f1dca1a64a18c9ea"
+            ],
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "f018808b21e0aabe",
+        "type": "xml",
+        "z": "49317004d5317078",
+        "name": "core_1_jsonxml_parse",
+        "property": "payload",
+        "attr": "",
+        "chr": "",
+        "x": 280,
+        "y": 380,
+        "wires": [
+            [
+                "ce4a8c74274d0c40"
+            ]
+        ]
+    },
+    {
+        "id": "f1dca1a64a18c9ea",
+        "type": "ui_gauge",
+        "z": "49317004d5317078",
+        "name": "",
+        "group": "52560e4898df94f5",
+        "order": 0,
+        "width": "4",
+        "height": "3",
+        "gtype": "gage",
+        "title": "PT_sensor_1_temp_BMP",
+        "label": "C",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "50",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 730,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "f47d7d9856c1399a",
+        "type": "mqtt in",
+        "z": "49317004d5317078",
+        "name": "core_2_mqtt_in",
+        "topic": "_1451DT/core_2/sensor/data",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "bdea7a73f727af35",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 100,
+        "y": 520,
+        "wires": [
+            [
+                "125ef743930c777d"
+            ]
+        ]
+    },
+    {
+        "id": "f582f9888aabdf2b",
+        "type": "ui_gauge",
+        "z": "49317004d5317078",
+        "name": "",
+        "group": "52560e4898df94f5",
+        "order": 0,
+        "width": "4",
+        "height": "3",
+        "gtype": "gage",
+        "title": "PT_sensor_2_temp_SHT",
+        "label": "C",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "50",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 730,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "125ef743930c777d",
+        "type": "xml",
+        "z": "49317004d5317078",
+        "name": "core_2_xml_parse",
+        "property": "payload",
+        "attr": "",
+        "chr": "",
+        "x": 290,
+        "y": 520,
+        "wires": [
+            [
+                "b97524d2103da84f",
+                "d24342e71396c5c9"
+            ]
+        ]
+    },
+    {
+        "id": "b97524d2103da84f",
+        "type": "function",
+        "z": "49317004d5317078",
+        "name": "parse_sensor_2",
+        "func": "if (msg.payload && msg.payload.TEDS) {\n    let transducerData = msg.payload.TEDS.transducerSampleDatas;\n    let msg1 = { topic: \"sensor_2_tempSHT\", payload: transducerData[0] || 'N/A' };\n    let msg2 = { topic: \"sensor_2_tempBMP\", payload: transducerData[1] || 'N/A' };\n    let msg3 = { topic: \"sensor_2_Humidity\", payload: transducerData[2] || 'N/A' };\n    let msg4 = { topic: \"sensor_2_Pressure\", payload: transducerData[3] || 'N/A' };\n    return [msg1, msg2, msg3, msg4];\n} else if (msg.payload && msg.payload.root) {\n    let transducerData = msg.payload.root.transducerSampleDatas;\n    let msg1 = { topic: \"sensor_2_tempSHT\", payload: transducerData[0] || 'N/A' };\n    let msg2 = { topic: \"sensor_2_tempBMP\", payload: transducerData[1] || 'N/A' };\n    let msg3 = { topic: \"sensor_2_Humidity\", payload: transducerData[2] || 'N/A' };\n    let msg4 = { topic: \"sensor_2_Pressure\", payload: transducerData[3] || 'N/A' };\n    return [msg1, msg2, msg3, msg4];\n} else if (msg.payload && typeof msg.payload === 'object') {\n    // Handle the case where msg.payload is a JSON object\n    console.log(\"msg.payload (JSON):\", msg.payload);\n\n    // Ensure the transducerSampleDatas property exists in msg.payload\n    let transducerData = (msg.payload.transducerSampleDatas || []);\n    let msg1 = { topic: \"sensor_2_tempSHT\", payload: transducerData[0] || 'N/A' };\n    let msg2 = { topic: \"sensor_2_tempBMP\", payload: transducerData[1] || 'N/A' };\n    let msg3 = { topic: \"sensor_2_Humidity\", payload: transducerData[2] || 'N/A' };\n    let msg4 = { topic: \"sensor_2_Pressure\", payload: transducerData[3] || 'N/A' };\n    return [msg1, msg2, msg3, msg4];\n} else {\n    // Handle case where msg.payload is not in the expected format\n    console.log(\"Unexpected payload format:\", msg.payload);\n    return null;\n}",
+        "outputs": 5,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 520,
+        "wires": [
+            [
+                "f582f9888aabdf2b",
+                "56a8c6e9338c804a"
+            ],
+            [
+                "1862df877838d618"
+            ],
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "d24342e71396c5c9",
+        "type": "xml",
+        "z": "49317004d5317078",
+        "name": "core_2_jsonxml_parse",
+        "property": "payload",
+        "attr": "",
+        "chr": "",
+        "x": 300,
+        "y": 580,
+        "wires": [
+            [
+                "b97524d2103da84f"
+            ]
+        ]
+    },
+    {
+        "id": "1862df877838d618",
+        "type": "ui_gauge",
+        "z": "49317004d5317078",
+        "name": "",
+        "group": "52560e4898df94f5",
+        "order": 0,
+        "width": "4",
+        "height": "3",
+        "gtype": "gage",
+        "title": "PT_sensor_2_temp_BMP",
+        "label": "C",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "50",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 730,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "b0ea399b2d8ce754",
+        "type": "mqtt in",
+        "z": "49317004d5317078",
+        "name": "twin_mqtt_in",
+        "topic": "_1451DT/digitaltwin/sensor/data",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "bdea7a73f727af35",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 930,
+        "y": 320,
+        "wires": [
+            [
+                "34505d2a59d6c1a9"
+            ]
+        ]
+    },
+    {
+        "id": "34505d2a59d6c1a9",
+        "type": "xml",
+        "z": "49317004d5317078",
+        "name": "twin_xml_parse",
+        "property": "payload",
+        "attr": "",
+        "chr": "",
+        "x": 1100,
+        "y": 320,
+        "wires": [
+            [
+                "eb21232a75b5e5cc",
+                "adb6c145a455ec91"
+            ]
+        ]
+    },
+    {
+        "id": "adb6c145a455ec91",
+        "type": "xml",
+        "z": "49317004d5317078",
+        "name": "twin_jsonxml_parse",
+        "property": "payload",
+        "attr": "",
+        "chr": "",
+        "x": 1110,
+        "y": 360,
+        "wires": [
+            [
+                "eb21232a75b5e5cc"
+            ]
+        ]
+    },
+    {
+        "id": "eb21232a75b5e5cc",
+        "type": "function",
+        "z": "49317004d5317078",
+        "name": "parse_digital_twin",
+        "func": "if (msg.payload && msg.payload.TEDS) {\n    let transducerData = msg.payload.TEDS.transducerSampleDatas;\n    let msg1 = { topic: \"dt_tempSHT\", payload: transducerData[0] || 'N/A' };\n    let msg2 = { topic: \"dt_tempBMP\", payload: transducerData[1] || 'N/A' };\n    let msg3 = { topic: \"dt_Humidity\", payload: transducerData[2] || 'N/A' };\n    let msg4 = { topic: \"dt_Pressure\", payload: transducerData[3] || 'N/A' };\n    return [msg1, msg2, msg3, msg4];\n} else if (msg.payload && msg.payload.root) {\n    let transducerData = msg.payload.root.transducerSampleDatas;\n    let msg1 = { topic: \"dt_tempSHT\", payload: transducerData[0] || 'N/A' };\n    let msg2 = { topic: \"dt_tempBMP\", payload: transducerData[1] || 'N/A' };\n    let msg3 = { topic: \"dt_Humidity\", payload: transducerData[2] || 'N/A' };\n    let msg4 = { topic: \"dt_Pressure\", payload: transducerData[3] || 'N/A' };\n    return [msg1, msg2, msg3, msg4];\n} else if (msg.payload && typeof msg.payload === 'object') {\n    // Handle the case where msg.payload is a JSON object\n    console.log(\"msg.payload (JSON):\", msg.payload);\n\n    // Ensure the transducerSampleDatas property exists in msg.payload\n    let transducerData = (msg.payload.transducerSampleDatas || []);\n    let msg1 = { topic: \"dt_tempSHT\", payload: transducerData[0] || 'N/A' };\n    let msg2 = { topic: \"dt_tempBMP\", payload: transducerData[1] || 'N/A' };\n    let msg3 = { topic: \"dt_Humidity\", payload: transducerData[2] || 'N/A' };\n    let msg4 = { topic: \"dt_Pressure\", payload: transducerData[3] || 'N/A' };\n    return [msg1, msg2, msg3, msg4];\n} else {\n    // Handle case where msg.payload is not in the expected format\n    console.log(\"Unexpected payload format:\", msg.payload);\n    return null;\n}",
+        "outputs": 5,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1310,
+        "y": 320,
+        "wires": [
+            [
+                "5063b8b39cb3f8c7",
+                "56a8c6e9338c804a"
+            ],
+            [
+                "2ca34b9a80cde87b"
+            ],
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "5063b8b39cb3f8c7",
+        "type": "ui_gauge",
+        "z": "49317004d5317078",
+        "name": "",
+        "group": "52560e4898df94f5",
+        "order": 0,
+        "width": "4",
+        "height": "3",
+        "gtype": "gage",
+        "title": "DT_temp_SHT",
+        "label": "C",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "50",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1560,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "2ca34b9a80cde87b",
+        "type": "ui_gauge",
+        "z": "49317004d5317078",
+        "name": "",
+        "group": "52560e4898df94f5",
+        "order": 0,
+        "width": "4",
+        "height": "3",
+        "gtype": "gage",
+        "title": "DT_temp_BMP",
+        "label": "C",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "50",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1560,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "c9e1b0751bd8d168",
+        "type": "mqtt in",
+        "z": "49317004d5317078",
+        "name": "pt_actuator_mqtt_in",
+        "topic": "_1451DT/room/heater/state",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "bdea7a73f727af35",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 110,
+        "y": 220,
+        "wires": [
+            [
+                "fa3d78b42b744047"
+            ]
+        ]
+    },
+    {
+        "id": "411714595a058981",
+        "type": "ui_text",
+        "z": "49317004d5317078",
+        "group": "52560e4898df94f5",
+        "order": 12,
+        "width": "2",
+        "height": "2",
+        "name": "",
+        "label": "PT_heater",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 750,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "a426584d8031c91d",
+        "type": "mqtt in",
+        "z": "49317004d5317078",
+        "name": "dt_actuator_mqtt_in",
+        "topic": "_1451DT/digitaltwin/heater/state",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "bdea7a73f727af35",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 950,
+        "y": 220,
+        "wires": [
+            [
+                "5b12e8f64512826f"
+            ]
+        ]
+    },
+    {
+        "id": "0b1b22b59b418a3c",
+        "type": "ui_text",
+        "z": "49317004d5317078",
+        "group": "52560e4898df94f5",
+        "order": 12,
+        "width": "2",
+        "height": "2",
+        "name": "",
+        "label": "DT_heater",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1570,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "c3f7b359cc1d6a04",
+        "type": "ui_numeric",
+        "z": "49317004d5317078",
+        "name": "",
+        "label": "target_temp",
+        "tooltip": "",
+        "group": "52560e4898df94f5",
+        "order": 14,
+        "width": "3",
+        "height": "2",
+        "wrap": false,
+        "passthru": true,
+        "topic": "topic",
+        "topicType": "msg",
+        "format": "{{value}}",
+        "min": "20",
+        "max": "25",
+        "step": 1,
+        "className": "",
+        "x": 90,
+        "y": 60,
+        "wires": [
+            [
+                "8b323dd9ca2eda69"
+            ]
+        ]
+    },
+    {
+        "id": "8b323dd9ca2eda69",
+        "type": "mqtt out",
+        "z": "49317004d5317078",
+        "name": "",
+        "topic": "_1451DT/digitaltwin/temp/control",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "bdea7a73f727af35",
+        "x": 1500,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "56a8c6e9338c804a",
+        "type": "ui_chart",
+        "z": "49317004d5317078",
+        "name": "",
+        "group": "52560e4898df94f5",
+        "order": 15,
+        "width": "0",
+        "height": "0",
+        "label": "Temperature(C)",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "10",
+        "ymax": "40",
+        "removeOlder": "2",
+        "removeOlderPoints": "10000",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1560,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f67be04f7e9a4f0a",
+        "type": "function",
+        "z": "49317004d5317078",
+        "name": "parse_control_sys",
+        "func": "if (msg.payload && typeof msg.payload === 'object') {\n    // Extract the transducerSampleData field from the payload\n    let transducerData = msg.payload.transducersampleData;\n\n    // Determine the payload based on the value of transducerData\n    let payload = (transducerData === 1) ? \"on\" : \"off\";\n\n    // Create the message with the topic and payload\n    let msg1 = { topic: \"pt_heater\", payload: payload };\n\n    return msg1;\n} else {\n    // Handle case where msg.payload is not in the expected format\n    console.log(\"Unexpected payload format:\", msg.payload);\n    return null;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 220,
+        "wires": [
+            [
+                "411714595a058981"
+            ]
+        ]
+    },
+    {
+        "id": "c1a927715eef0a0b",
+        "type": "function",
+        "z": "49317004d5317078",
+        "name": "parse_control_twin",
+        "func": "if (msg.payload && typeof msg.payload === 'object') {\n    // Extract the transducerSampleData field from the payload\n    let transducerData = msg.payload.transducersampleData;\n\n    // Determine the payload based on the value of transducerData\n    let payload = (transducerData === 1) ? \"on\" : \"off\";\n\n    // Create the message with the topic and payload\n    let msg1 = { topic: \"dt_heater\", payload: payload };\n    return msg1;\n} else {\n    // Handle case where msg.payload is not in the expected format\n    console.log(\"Unexpected payload format:\", msg.payload);\n    return null;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1330,
+        "y": 220,
+        "wires": [
+            [
+                "0b1b22b59b418a3c"
+            ]
+        ]
+    },
+    {
+        "id": "fa3d78b42b744047",
+        "type": "json",
+        "z": "49317004d5317078",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": true,
+        "x": 290,
+        "y": 220,
+        "wires": [
+            [
+                "f67be04f7e9a4f0a"
+            ]
+        ]
+    },
+    {
+        "id": "5b12e8f64512826f",
+        "type": "json",
+        "z": "49317004d5317078",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 1130,
+        "y": 220,
+        "wires": [
+            [
+                "c1a927715eef0a0b"
+            ]
+        ]
+    },
+    {
+        "id": "1f3f1e644ac8636c",
+        "type": "exec",
+        "z": "49317004d5317078",
+        "command": "python3 m5stack-shana/digitaltwin-demo/simulation/sim_greenhouse.py --config m5stack-shana/digitaltwin-demo/config.yml",
+        "addpay": "",
+        "append": "",
+        "useSpawn": "true",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Simulation",
+        "x": 1170,
+        "y": 140,
+        "wires": [
+            [
+                "e5bfa494a54a7f82"
+            ],
+            [
+                "e5bfa494a54a7f82"
+            ],
+            [
+                "e5bfa494a54a7f82"
+            ]
+        ]
+    },
+    {
+        "id": "e5bfa494a54a7f82",
+        "type": "debug",
+        "z": "49317004d5317078",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 1350,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "defd6c1620a23b89",
+        "type": "inject",
+        "z": "49317004d5317078",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 1000,
+        "y": 140,
+        "wires": [
+            [
+                "1f3f1e644ac8636c"
+            ]
+        ]
+    }
+]

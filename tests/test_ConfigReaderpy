@@ -1,0 +1,63 @@
+import os
+import pytest
+import yaml
+from py_lib_digitaltwin.ConfigReader import ConfigReader
+
+@pytest.fixture
+def valid_config_file(tmp_path):
+    config_data = {
+        "mqtthost": "localhost",
+        "mqttport": 1883,
+        "spfx": "prefix",
+        "tomdop": "value1",
+        "tomcop": "value2",
+        "tomd0op": "value3",
+        "loc": "location",
+        "locclient": "client",
+        "TEMPTEDS": "temp",
+        "HUMIDTEDS": "humid",
+        "SERVOTEDS": "servo",
+        "SECURITYTEDS": "security",
+        "TEMPBINTEDS": "tempbin",
+        "HUMIDBINTEDS": "humidbin",
+        "SERVOBINTEDS": "servobin",
+        "SECURITYBINTEDS": "securitybin"
+    }
+    config_file = tmp_path / "config.yml"
+    with open(config_file, "w") as file:
+        yaml.dump(config_data, file)
+    return config_file
+
+@pytest.fixture
+def invalid_config_file(tmp_path):
+    config_data = {
+        "mqtthost": "localhost",
+        "spfx": "prefix"
+    }
+    config_file = tmp_path / "config.yml"
+    with open(config_file, "w") as file:
+        yaml.dump(config_data, file)
+    return config_file
+
+def test_load_valid_config(valid_config_file):
+    reader = ConfigReader(valid_config_file)
+    config = reader.load_config()
+    assert config["mqtthost"] == "localhost"
+    assert config["mqttport"] == 1883
+
+def test_missing_required_field(invalid_config_file):
+    reader = ConfigReader(invalid_config_file)
+    with pytest.raises(ValueError, match="Missing required field: mqttport"):
+        reader.load_config()
+
+def test_invalid_file_path():
+    reader = ConfigReader("nonexistent.yml")
+    with pytest.raises(FileNotFoundError, match="Config file not found"):
+        reader.load_config()
+
+def test_invalid_file_format(tmp_path):
+    invalid_file = tmp_path / "config.txt"
+    invalid_file.write_text("Invalid content")
+    reader = ConfigReader(invalid_file)
+    with pytest.raises(ValueError, match="Config file must be in YAML format"):
+        reader.load_config()

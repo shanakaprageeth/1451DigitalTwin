@@ -14,3 +14,7 @@ Press <>Code and select Download ZIP.
 - Nothing. You can design your Node-RED on free cloud service. See the textbook.
 
 - If you have Rasberry-Pi, follow the textbook, and install the Node-RED. (recommended)
+
+## Executing sim on code spaces
+Open code space
+Execute ./ci_tests.sh nodered

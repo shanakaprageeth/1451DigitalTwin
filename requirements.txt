@@ -1,0 +1,8 @@
+paho-mqtt
+dht11
+RPi.GPIO
+tox
+PyYAML
+temporenc
+requests
+python-switchbot
